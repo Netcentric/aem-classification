@@ -1,3 +1,5 @@
+![](https://github.com/Netcentric/aem-classification/workflows/Java%20CI/badge.svg)
+
 # Overview
 This repository comprises of several modules around [AEMs Content Classification][1]. 
 
