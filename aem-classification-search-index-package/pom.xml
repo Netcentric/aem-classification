@@ -1,0 +1,123 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>aem-classification-search-index-package</artifactId>
+    <name>AEM Classification Index Package</name>
+    <description>Content Package containing the Oak index definitions to be able to query the content classifications.</description>
+
+    <packaging>content-package</packaging>
+    <parent>
+        <groupId>biz.netcentric.filevault.validator</groupId>
+        <artifactId>aem-classification</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <aem.host>localhost</aem.host>
+        <aem.port>5502</aem.port>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.jackrabbit</groupId>
+                <artifactId>filevault-package-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <filterSource>src/main/META-INF/vault/filter.xml</filterSource>
+                    <allowIndexDefinitions>true</allowIndexDefinitions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.day.jcr.vault</groupId>
+                <artifactId>content-package-maven-plugin</artifactId>
+                <configuration>
+                    <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <!-- integrate the hook from https://github.com/code-distillery/filevault-oak-reindex-hook to only reindex if really
+                            necessary -->
+                        <id>copy-reindex-hook-into-package</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>net.distilledcode</groupId>
+                                    <artifactId>filevault-oak-reindex-hook</artifactId>
+                                    <version>1.0.2</version>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/vault-work/META-INF/vault/hooks</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.apache.maven.plugins
+                                        </groupId>
+                                        <artifactId>
+                                            maven-dependency-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [2.10,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>copy</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>autoInstallPackage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.day.jcr.vault</groupId>
+                        <artifactId>content-package-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install-content-package</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>install</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
