@@ -1,5 +1,0 @@
-# Touch UI component deprecations
-/,PUBLIC
-/libs/granite/ui/components/coral/foundation/form/pathbrowser,INTERNAL_DEPRECATED,Deprecated since 6.5: Use pathfield instead!
-/libs/granite/ui/components/foundation/form/pathbrowser,INTERNAL_DEPRECATED,Deprecated since 6.5: Use pathfield instead!
-/libs/granite/ui/components/coral/foundation/form/autocomplete,INTERNAL_DEPRECATED,It is using a Coral2 component, which will not be supported any longer. Use dedicated component for the purpose, such as PathField, or build your own field based on foundation-autocomplete.
