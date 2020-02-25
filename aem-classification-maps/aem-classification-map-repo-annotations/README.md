@@ -7,7 +7,7 @@ It has been generated with the [Maven Plugin][2].
 The classification map is available at Maven Central with the following coordinates:
 
 Group ID | Artifact ID | Version 
---- | --- | --- | ---
+--- | --- | ---
 `biz.netcentric.filevault.validator.maps` | `aem-classification-map-repo-annotations` | `1.0.0-SNAPHOT`
 
 The following files are provided in that artifact:

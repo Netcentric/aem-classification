@@ -8,7 +8,7 @@ This validator map contains deprecated resource types which are not yet [annotat
 The classification map is available at Maven Central with the following coordinates:
 
 Group ID | Artifact ID | Version 
---- | --- | --- | ---
+--- | --- | ---
 `biz.netcentric.filevault.validator.maps` | `aem-classification-map-deprecations` | `1.0.0-SNAPHOT`
 
 The following files are provided in that artifact:
@@ -20,4 +20,3 @@ URL | Description
 
 
 [1]: ../aem-classification-map-repo-annotations/README.md
-[2]: ../../aem-classification-maven-plugin/README.md

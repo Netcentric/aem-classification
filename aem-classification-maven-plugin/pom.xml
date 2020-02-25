@@ -16,6 +16,13 @@
         <maven>${maven.version}</maven>
     </prerequisites>
 
+    <distributionManagement>
+        <site>
+            <id>github</id>
+            <url>scm:git:git@github.com:Netcentric/aem-classification.git</url>
+        </site>
+    </distributionManagement>
+
     <build>
         <!-- https://blog.soebes.de/blog/2015/06/12/making-github-page-for-mojohaus/ -->
         <pluginManagement>
@@ -27,7 +34,7 @@
                         <scmBranch>gh-pages</scmBranch>
                     </configuration>
                 </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
