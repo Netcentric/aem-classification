@@ -9,7 +9,7 @@
     <parent>
         <groupId>biz.netcentric.filevault.validator</groupId>
         <artifactId>aem-classification</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <prerequisites>
@@ -115,7 +115,7 @@
         <dependency>
             <groupId>biz.netcentric.filevault.validator</groupId>
             <artifactId>aem-classification-validator</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
