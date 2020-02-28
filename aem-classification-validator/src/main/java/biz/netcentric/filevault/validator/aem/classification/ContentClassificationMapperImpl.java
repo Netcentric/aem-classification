@@ -85,10 +85,12 @@ public class ContentClassificationMapperImpl implements ContentClassificationMap
             ContentClassification classification = Enum.valueOf(ContentClassification.class, record.get(1));
             final String remark;
             // a third part may contain hints (separated from second part with ":")
-            if (record.size() >= 3) {
+            if (record.size() == 3) {
                 remark = record.get(2);
             } else {
-                LOGGER.warn("More than 3 columns in line {} given, ignoring the ones exceeding the 3rd column.", record.getRecordNumber());
+                if (record.size() > 3) {
+                    LOGGER.warn("More than 3 columns in line {} given, ignoring the ones exceeding the 3rd column.", record.getRecordNumber());
+                }
                 remark = null;
             }
             put(resourceType, classification, remark);
