@@ -1,4 +1,4 @@
-![](https://github.com/Netcentric/aem-classification/workflows/Java%20CI/badge.svg)
+![](https://github.com/Netcentric/aem-classification/workflows/Java%20CI/badge.svg)[![License](https://img.shields.io/badge/License-EPL%201.0-red.svg)](https://opensource.org/licenses/EPL-1.0)
 
 # Overview
 This repository comprises of several modules around [AEMs Content Classification][1]. 
