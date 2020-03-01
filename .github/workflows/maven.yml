@@ -19,7 +19,7 @@ jobs:
       if: github.ref != 'refs/heads/master'
       run: mvn -B clean package --file pom.xml
     - name: Deploy with Maven
-      if: github.ref == 'ref/heads/master'
+      if: github.ref == 'refs/heads/master'
       run: mvn -B clean deploy --file pom.xml
       env: 
         MAVEN_USERNAME: ${{ secrets.OSSRH_TOKEN_USER }}
