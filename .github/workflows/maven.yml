@@ -1,4 +1,4 @@
-name: Java CI
+name: Java CI/CD
 
 on: [push]
 
@@ -15,12 +15,18 @@ jobs:
         server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
         server-username: MAVEN_USERNAME # env variable for username in deploy
         server-password: MAVEN_PASSWORD # env variable for token in deploy
-    - name: Build with Maven
+    - name: Build Reactor with Maven
       if: github.ref != 'refs/heads/master'
-      run: mvn -B clean package --file pom.xml
-    - name: Deploy with Maven
+      run: mvn -B clean install --file pom.xml
+    - name: Build Site for Maven Plugin
+      if: github.ref != 'refs/heads/master'
+      run: mvn -B clean site --file aem-classification-maven-plugin/pom.xml
+    - name: Deploy Reactor with Maven
       if: github.ref == 'refs/heads/master'
       run: mvn -B clean deploy --file pom.xml
       env: 
         MAVEN_USERNAME: ${{ secrets.OSSRH_TOKEN_USER }}
         MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
+    - name: Build and Deploy Site for Maven Plugin
+      if: github.ref == 'refs/heads/master'
+      run: mvn -B clean site site:stage scm-publish:publish-scm --file aem-classification-maven-plugin/pom.xml
