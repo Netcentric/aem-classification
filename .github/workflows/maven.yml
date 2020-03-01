@@ -29,4 +29,4 @@ jobs:
         MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
     - name: Build and Deploy Site for Maven Plugin
       if: github.ref == 'refs/heads/master'
-      run: mvn -B clean site site:stage scm-publish:publish-scm --file aem-classification-maven-plugin/pom.xml
+      run: mvn -B clean site site:stage scm-publish:publish-scm -Dusername=kwin -Dpassword=${{ secrets.GITHUB_SITE_DEPLOY_TOKEN_KWIN }} --file aem-classification-maven-plugin/pom.xml
