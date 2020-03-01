@@ -18,8 +18,8 @@ jobs:
         server-password: MAVEN_PASSWORD # env variable for token in deploy
     - name: Adjust Git Config
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
     - name: Build Reactor with Maven
       if: github.ref != 'refs/heads/master'
       run: mvn -B clean install --file pom.xml
