@@ -19,7 +19,7 @@
     <distributionManagement>
         <site>
             <id>github</id>
-            <url>scm:git:git@github.com:Netcentric/aem-classification.git</url>
+            <url>scm:git:https://github.com/Netcentric/aem-classification.git</url>
         </site>
     </distributionManagement>
 
