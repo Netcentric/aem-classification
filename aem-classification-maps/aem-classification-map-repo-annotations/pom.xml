@@ -8,7 +8,7 @@
     <parent>
         <groupId>biz.netcentric.filevault.validator.maps</groupId>
         <artifactId>aem-classification-maps</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>6.5.0-SNAPSHOT</version>
     </parent>
     
     
