@@ -16,10 +16,10 @@ jobs:
         server-username: MAVEN_USERNAME # env variable for username in deploy
         server-password: MAVEN_PASSWORD # env variable for token in deploy
     - name: Build with Maven
-      if: github.ref != 'master'
+      if: github.ref != 'refs/heads/master'
       run: mvn -B clean package --file pom.xml
     - name: Deploy with Maven
-      if: github.ref == 'master'
+      if: github.ref == 'ref/heads/master'
       run: mvn -B clean deploy --file pom.xml
       env: 
         MAVEN_USERNAME: ${{ secrets.OSSRH_TOKEN_USER }}
