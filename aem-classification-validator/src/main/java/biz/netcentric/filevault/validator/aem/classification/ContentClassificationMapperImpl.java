@@ -63,14 +63,13 @@ public class ContentClassificationMapperImpl implements ContentClassificationMap
     private static final CSVFormat CSV_FORMAT = CSVFormat.RFC4180.withCommentMarker('#');
     private static final Logger LOGGER = LoggerFactory.getLogger(ContentClassificationMapperImpl.class);
 
-
     public ContentClassificationMapperImpl(@NotNull String label) {
         this.classificationMap = new TreeMap<>(); // this is sorted by key
         this.remarkMap = new HashMap<>();
         this.label = label;
     }
 
-    public ContentClassificationMapperImpl(@NotNull InputStream input) throws IOException {
+    public ContentClassificationMapperImpl(@NotNull InputStream input, String fileName) throws IOException {
         this("");
         Iterable<CSVRecord> records = CSV_FORMAT.parse(new InputStreamReader(input, StandardCharsets.US_ASCII));
         for (CSVRecord record : records) {
@@ -89,7 +88,7 @@ public class ContentClassificationMapperImpl implements ContentClassificationMap
                 remark = record.get(2);
             } else {
                 if (record.size() > 3) {
-                    LOGGER.warn("More than 3 columns in line {} given, ignoring the ones exceeding the 3rd column.", record.getRecordNumber());
+                    LOGGER.warn("More than 3 columns in line {} in file {} given, ignoring the ones exceeding the 3rd column.", record.getRecordNumber(), fileName);
                 }
                 remark = null;
             }

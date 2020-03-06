@@ -31,7 +31,7 @@ public class ContentClassificationMapImplTest {
     @Test
     public void testValidMap() throws IOException {
         try (InputStream input = ContentClassificationMapImplTest.class.getResourceAsStream("/valid-classification.map")) {
-            ContentClassificationMapper map = new ContentClassificationMapperImpl(input);
+            ContentClassificationMapper map = new ContentClassificationMapperImpl(input, "valid-classification.map");
             ContentClassificationMapper expectedMap = new ContentClassificationMapperImpl("Simple");
             expectedMap.put("/test", ContentClassification.INTERNAL_DEPRECATED, "Deprecated");
             Assertions.assertEquals(expectedMap, map);
@@ -50,7 +50,7 @@ public class ContentClassificationMapImplTest {
             map.write(output);
             try (ByteArrayInputStream input = new ByteArrayInputStream(output.toByteArray())) {
                 // now reload
-                ContentClassificationMapper map2 = new ContentClassificationMapperImpl(input);
+                ContentClassificationMapper map2 = new ContentClassificationMapperImpl(input, "name");
                 assertEquals(map, map2);
             }
         }
@@ -105,7 +105,7 @@ public class ContentClassificationMapImplTest {
     @Test
     public void testInvalidMap() throws IOException {
         try (InputStream input = ContentClassificationMapImplTest.class.getResourceAsStream("/invalid-classification.map")) {
-            Assertions.assertThrows(IllegalArgumentException.class,() -> { new ContentClassificationMapperImpl(input); });
+            Assertions.assertThrows(IllegalArgumentException.class,() -> { new ContentClassificationMapperImpl(input, "invalid-classification.map"); });
         }
     }
 

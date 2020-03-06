@@ -68,11 +68,11 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
             for (String mapUrl : mapUrls.split(",")) {
                 try (InputStream input = URLFactory.createURL(mapUrl).openStream()) {
                     if (map == null) {
-                        map = new ContentClassificationMapperImpl(input);
+                        map = new ContentClassificationMapperImpl(input, mapUrl);
                     } else {
                         LOGGER.debug("Merge another map {}", mapUrl);
                         // merge another map
-                        map.merge(new ContentClassificationMapperImpl(input));
+                        map.merge(new ContentClassificationMapperImpl(input, mapUrl));
                     }
                 }
             }
