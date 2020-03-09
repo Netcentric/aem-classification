@@ -41,6 +41,7 @@
         <menu ref="modules"/>
         <menu ref="reports" inherit="bottom"/>
         <menu name="Links">
+            <item href="https://github.com/Netcentric/aem-classification/tree/master/aem-classification-validator" name="AEM Classification Validator"/>
             <item href="https://jackrabbit.apache.org/filevault/" name="Apache Jackrabbit FileVault"/>
             <item href="https://jackrabbit.apache.org/filevault-package-maven-plugin/index.html" name="Apache Jackrabbit FileVault Maven Plugin"/>
             <item href="https://jackrabbit.apache.org/" name="Apache Jackrabbit"/>

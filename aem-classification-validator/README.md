@@ -40,24 +40,29 @@ You can use this validator with the [FileVault Package Maven Plugin][3] in versi
     <validatorsSettings>
       <netcentric-aem-classification>
         <options>
-          <maps>tccl:biz/netcentric/filevault/validator/maps/aem-classification-map-repo-annotations.map</maps><!-- references the classification.map from the ThreadContextClassLoader, might contain multiple maps (comma-separated) -->
+          <!-- references the classification.map from the ThreadContextClassLoader, might contain multiple maps (comma-separated) -->
+          <maps>tccl:biz/netcentric/filevault/validator/maps/aem-classification-map-deprecations/coral2deprecations.map,tccl:biz/netcentric/filevault/validator/maps/aem-classification-map-deprecations/graniteuideprecations.map,tccl:biz/netcentric/filevault/validator/maps/aem-classification-map-repo-annotations.map</maps>
         </options>
       </netcentric-aem-classification>
     </validatorsSettings>
   </configuration>
   <dependencies>
-    <!-- the dependency for the validator plugin itself -->
     <dependency>
       <groupId>biz.netcentric.filevault.validator</groupId>
       <artifactId>aem-classification-validator</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
-    <!-- the dependency containing the classification map -->
-    <dependency>
-      <groupId>biz.netcentric.filevault.validator.maps</groupId>
-      <artifactId>aem-classification-map-repo-annotations</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
+      <!-- the dependency containing the actual classification map -->
+      <dependency>
+        <groupId>biz.netcentric.filevault.validator.maps</groupId>
+        <artifactId>aem-classification-map-repo-annotations</artifactId>
+        <version>6.5.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>biz.netcentric.filevault.validator.maps</groupId>
+        <artifactId>aem-classification-map-deprecations</artifactId>
+        <version>6.5.0-SNAPSHOT</version>
+      </dependency>
   </dependencies>
 </plugin>
 ```

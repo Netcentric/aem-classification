@@ -13,7 +13,7 @@ The AEM instance needs to have several [query indices][3] in place for this plug
 1. property index limited to properties jcr:primaryType and jcr:mixinTypes for node types granite:FinalArea, granite:PublicArea, granite:InternalArea and granite:AbstractArea
 1. property index for properties cq:deprecated for any node type)
 
-There is a package containing the relevant indices at [4].
+There is a package containing the relevant indices called [aem-classification-search-index-package][4].
 
 Usage
 ---------
@@ -25,6 +25,6 @@ mvn biz.netcentric.filevault.validator:aem-classification-maven-plugin:0.0.1-SNA
 ```
 
 [1]: https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/sustainable-upgrades.html#content-classifications
-[2]: https://github.com/Netcentric/aem-classification/aem-classification-validator
+[2]: https://github.com/Netcentric/aem-classification/tree/master/aem-classification-validator
 [3]: https://jackrabbit.apache.org/oak/docs/query/property-index.html
-[4]: https://github.com/Netcentric/aem-classification/aem-classification-search-index-package
+[4]: https://github.com/Netcentric/aem-classification/tree/master/aem-classification-search-index-package
