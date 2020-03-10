@@ -21,7 +21,7 @@ Usage
 The only goal can be used without a Maven project like this
 
 ```
-mvn biz.netcentric.filevault.validator:aem-classification-maven-plugin:0.0.1-SNAPSHOT:download-content-classification
+mvn biz.netcentric.filevault.validator:aem-classification-maven-plugin:1.0.0-SNAPSHOT:download-content-classification
 ```
 
 [1]: https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/sustainable-upgrades.html#content-classifications

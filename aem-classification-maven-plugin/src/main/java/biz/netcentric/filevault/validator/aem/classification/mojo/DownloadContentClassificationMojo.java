@@ -32,6 +32,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.felix.utils.json.JSONParser;
@@ -39,11 +40,8 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.codehaus.plexus.components.interactivity.Prompter;
-import org.codehaus.plexus.components.interactivity.PrompterException;
 
 import biz.netcentric.filevault.validator.aem.classification.ContentClassification;
 import biz.netcentric.filevault.validator.aem.classification.ContentClassificationMapper;
@@ -79,16 +77,14 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
      */
     @Parameter(property="password", defaultValue = "admin")
     String password;
-    
+
     /**
-     * If the classification map should be wrapped in a JAR file.
+     * If the classification map should be wrapped in a JAR file this
+     * needs to be set to the filepath the map should have within the JAR.
      */
-    @Parameter(property="wrapInJar", defaultValue = "false")
-    boolean wrapInJar;
-
-    @Component
-    private Prompter prompter;
-
+    @Parameter(property="relativeFileNameInJar", required = false)
+    File relativeFileNameInJar;
+    
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
@@ -98,7 +94,7 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
             log.warn("Make sure that the relevant search index definitions are deployed on AEM at " + baseUrl + ". Otherwise this goal will fail!");
             log.info("Start retrieving the classification and deprecation data from " + baseUrl);
             
-            ContentClassificationMapper map = new ContentClassificationMapperImpl(aemVersion);
+            ContentClassificationMapper map = new ContentClassificationMapperImpl("AEM " + aemVersion);
             // always make sure that the root node is PUBLIC (even though this might not be part of the classification map extracted from a repo)
             map.put("/", ContentClassification.PUBLIC, null);
             // 1. retrieve classifications from mixins and store in map
@@ -118,21 +114,14 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
                 map.write(fileOutputStream);
             }
             log.info("Written classification map to " + outputFile + " containing " + map.size() + " entries.");
-            prompter.prompt("Please enrich with deprecated components from AEM release notes https://helpx.adobe.com/experience-manager/6-x/release-notes/deprecated-removed-features.html. Afterwards press enter");
             
-            // 4. wrap in a JAR
-            if (wrapInJar) {
-                File jarFile = createJarWrapper(outputFile);
+            // 4. optionally wrap in a JAR
+            if (relativeFileNameInJar != null) {
+                File jarFile = createJarWrapper(outputFile, relativeFileNameInJar);
                 log.info("Written wrapper jar to " + jarFile);
-                
-                //  5. optionally upload to a Maven Repository?
-                log.info("To deploy this artifact just issue the following command");
-                log.info("mvn org.apache.maven.plugins:maven-deploy-plugin:3.0.0-M1:deploy-file -Dfile="+jarFile+" -DrepositoryId=nexus -Durl=https://repo.int.netcentric.biz/nexus/content/repositories/netcentric-releases/ -DgroupId=biz.netcentric.aem -DartifactId=aem-content-classification -Dversion="+aemVersion);
             }
         } catch(IOException|IllegalStateException e) {
             throw new MojoFailureException("Could not generate classification JAR:" + e.getMessage(), e);
-        } catch (PrompterException e) {
-            throw new MojoFailureException("Could not prompt for user input: " + e.getMessage(), e);
         }
     }
 
@@ -226,18 +215,19 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
         getLog().debug("Connecting to " + url + "...");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         String credentials = username+":"+password;
-        // use base64
+        // use basic auth
         String encoded = Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));  //Java 8
         connection.setRequestProperty("Authorization", "Basic "+encoded);
         return connection.getInputStream();
     }
 
-    File createJarWrapper(File sourceFile) throws IOException {
+    File createJarWrapper(File sourceFile, File relativeFileNameInJar) throws IOException {
         Manifest manifest = new Manifest();
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
         File outputFile = File.createTempFile("contentclassification", ".jar");
         try (JarOutputStream target = new JarOutputStream(new FileOutputStream(outputFile), manifest)) {
-            JarEntry entry = new JarEntry("classification.map");
+            // convert to forward slashes
+            JarEntry entry = new JarEntry(FilenameUtils.separatorsToUnix(relativeFileNameInJar.getPath()));
             entry.setTime(sourceFile.lastModified());
             target.putNextEntry(entry);
             try (InputStream input = new FileInputStream(sourceFile)) {
