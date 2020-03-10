@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -97,57 +98,64 @@ public class ContentClassificationMapperImpl implements ContentClassificationMap
     }
 
     @Override
-    public @NotNull Entry<ContentClassification, String> getContentClassificationAndRemarkForResourceType(@NotNull String resourceType, @Nullable Collection<String> whitelistedResourceTypes) {
+    public @NotNull Entry<ContentClassification, String> getContentClassificationAndRemarkForResourcePath(@NotNull String resourcePath, @Nullable Collection<Pattern> whitelistedResourcePaths) {
         // ignore empty resourceTypes
-        if (StringUtils.isBlank(resourceType)) {
+        if (StringUtils.isBlank(resourcePath)) {
             return new SimpleEntry<>(ContentClassification.PUBLIC, null);
         }
         
         // make resourceType absolute!
-        if (!resourceType.startsWith("/")) {
+        if (!resourcePath.startsWith("/")) {
             // always assume "/libs" to be on the resource resolver's search path
-            resourceType = "/libs/" + resourceType;
+            resourcePath = "/libs/" + resourcePath;
         }
-        if (resourceType.endsWith("/") && !resourceType.equals("/")) {
-            throw new IllegalStateException("Resource type must not end with '/' but is '" + resourceType + "'");
+        if (resourcePath.endsWith("/") && !resourcePath.equals("/")) {
+            throw new IllegalStateException("Resource path must not end with '/' but is '" + resourcePath + "'");
         }
 
         // is the resource type whitelisted?
-        if (whitelistedResourceTypes != null && whitelistedResourceTypes.contains(resourceType)) {
-            LOGGER.debug("Resource type '{}' is explicitly whitelisted and therefore has no restrictions!", resourceType);
+        if (isResourcePathWhitelisted(resourcePath, whitelistedResourcePaths)) {
+            LOGGER.debug("Resource path '{}' is explicitly whitelisted and therefore has no restrictions!", resourcePath);
             return new SimpleEntry<>(ContentClassification.PUBLIC, null);
         }
         // check for direct match first
-        ContentClassification classification = classificationMap.get(resourceType);
+        ContentClassification classification = classificationMap.get(resourcePath);
         if (classification != null) {
-            LOGGER.debug("Found exact match for classification of '{}': {}", resourceType, classification.getLabel());
-            return new SimpleEntry<>(classification, remarkMap.get(resourceType));
+            LOGGER.debug("Found exact match for classification of '{}': {}", resourcePath, classification.getLabel());
+            return new SimpleEntry<>(classification, remarkMap.get(resourcePath));
         }
 
         // get longest prefix entry, which still matches
-        String parentResourceType = resourceType;
+        String parentResourceType = resourcePath;
         // go to parent
         while (!parentResourceType.equals("/")) {
             parentResourceType = Text.getRelativeParent(parentResourceType, 1);
             classification = classificationMap.get(parentResourceType);
             if (classification != null) {
-                LOGGER.debug("Found inexact match for classification of '{}' at '{}': {}", resourceType, parentResourceType, classification.getChildNodeClassification().getLabel());
+                LOGGER.debug("Found inexact match for classification of '{}' at '{}': {}", resourcePath, parentResourceType, classification.getChildNodeClassification().getLabel());
                 return new SimpleEntry<ContentClassification, String>(classification.getChildNodeClassification(),
                         remarkMap.get(parentResourceType));
             }
         }
-        throw new IllegalStateException("Could not find a classification for resource type '" + resourceType + "'");
+        throw new IllegalStateException("Could not find a classification for resource path '" + resourcePath + "'");
+    }
+
+    private boolean isResourcePathWhitelisted(@NotNull String resourcePath, @Nullable Collection<Pattern> whitelistedResourceTypes) {
+        if (whitelistedResourceTypes == null) {
+            return false;
+        }
+        return whitelistedResourceTypes.stream().anyMatch(r -> r.matcher(resourcePath).matches());
     }
 
     @Override
-    public void put(@NotNull String resourceType, @NotNull ContentClassification classification, @Nullable String remark) {
+    public void put(@NotNull String resourcePath, @NotNull ContentClassification classification, @Nullable String remark) {
         // validate that only absolute resource types are given
-        if (!resourceType.startsWith("/")) {
-            throw new IllegalArgumentException("Only absolute resource types are supported, but resource type given is '" + resourceType + "'.");
+        if (!resourcePath.startsWith("/")) {
+            throw new IllegalArgumentException("Only absolute resource paths are supported, but resource path given is '" + resourcePath + "'.");
         }
-        classificationMap.put(resourceType, classification);
+        classificationMap.put(resourcePath, classification);
         if (StringUtils.isNotEmpty(remark)) {
-            remarkMap.put(resourceType, remark);
+            remarkMap.put(resourcePath, remark);
         }
     }
 
@@ -232,7 +240,7 @@ public class ContentClassificationMapperImpl implements ContentClassificationMap
         for (Map.Entry<String, ContentClassification> newEntry : otherMapImpl.classificationMap.entrySet()) {
             // what to do with inexact matches?
             // actually a previous entry on a parent node can be more restrictive
-            ContentClassification oldClassification = getContentClassificationAndRemarkForResourceType(newEntry.getKey(), null).getKey();
+            ContentClassification oldClassification = getContentClassificationAndRemarkForResourcePath(newEntry.getKey(), null).getKey();
             if (oldClassification == null || oldClassification.ordinal() > newEntry.getValue().ordinal()) {
                 entryMapToMerge.put(newEntry.getKey(), newEntry.getValue());
                 removeChildEntriesWithLowerClassification(newEntry.getKey(), newEntry.getValue());

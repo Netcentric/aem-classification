@@ -25,9 +25,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.spi.commons.name.NameFactoryImpl;
@@ -40,6 +42,7 @@ import org.apache.jackrabbit.vault.validation.spi.ValidationMessageSeverity;
 import org.apache.sling.api.SlingConstants;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,18 +83,20 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     
     
     private final ContentClassificationMapper classificationMap;
-    private final Collection<String> resourceTypeWhitelist;
+    private final Collection<String> whitelistedResourcePaths;
+    private final Collection<Pattern> whitelistedResourcePathPatterns;
     private final Map<ContentClassification, ValidationMessageSeverity> severityPerClassification;
 
     private @NotNull ValidationMessageSeverity defaultSeverity;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(AemClassificationValidator.class);
 
-    public AemClassificationValidator(@NotNull ValidationMessageSeverity defaultSeverity, @NotNull ContentClassificationMapper classificationMap, @NotNull Collection<String> resourceTypeWhitelist, @NotNull Map<ContentClassification, ValidationMessageSeverity> severityPerClassification) {
+    public AemClassificationValidator(@NotNull ValidationMessageSeverity defaultSeverity, @NotNull ContentClassificationMapper classificationMap, @NotNull Collection<String> whitelistedResourcePaths, @NotNull Map<ContentClassification, ValidationMessageSeverity> severityPerClassification) {
         super();
         this.defaultSeverity = defaultSeverity;
         this.classificationMap = classificationMap;
-        this.resourceTypeWhitelist = resourceTypeWhitelist;
+        this.whitelistedResourcePaths = whitelistedResourcePaths;
+        this.whitelistedResourcePathPatterns = whitelistedResourcePaths.stream().map(Pattern::compile).collect(Collectors.toList());
         this.severityPerClassification = severityPerClassification;
     }
 
@@ -105,7 +110,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
         // attributes resourceType ...
         String usedResource = node.getValue(SLING_RESOURCE_TYPE_PROPERTY_NAME);
         if (usedResource != null) {
-            Entry<ContentClassification,String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourceType(usedResource, resourceTypeWhitelist);
+            Entry<ContentClassification,String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourcePath(usedResource, whitelistedResourcePathPatterns);
             if (!classificationAndRemark.getKey().isAllowed(ContentUsage.REFERENCE)) {
                 messages.add(getDocviewViolationMessage(node.label, ContentUsage.REFERENCE, usedResource, classificationAndRemark.getKey(), classificationAndRemark.getValue()));
             }
@@ -114,7 +119,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
         // ... and resourceSuperType are considered
         String superResource = node.getValue(SLING_RESOURCE_SUPER_TYPE_PROPERTY_NAME);
         if (superResource != null) {
-            Entry<ContentClassification,String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourceType(superResource, resourceTypeWhitelist);
+            Entry<ContentClassification,String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourcePath(superResource, whitelistedResourcePathPatterns);
             if (!classificationAndRemark.getKey().isAllowed(ContentUsage.INHERIT)) {
                 messages.add(getDocviewViolationMessage(node.label, ContentUsage.INHERIT, superResource, classificationAndRemark.getKey(), classificationAndRemark.getValue()));
             }
@@ -152,7 +157,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
         }
         // is this an overlay?
         String overlaidResource = "/libs/" + path.substring("/apps/".length());
-        Entry<ContentClassification, String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourceType(overlaidResource, resourceTypeWhitelist);
+        Entry<ContentClassification, String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourcePath(overlaidResource, whitelistedResourcePathPatterns);
         if (classificationAndRemark.getKey().isAllowed(ContentUsage.OVERLAY)) {
             return null;
         }
@@ -206,7 +211,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     }
 
     private ValidationMessage validateResourceTypeUsage(String resourceType) {
-        Entry<ContentClassification,String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourceType(resourceType, resourceTypeWhitelist);
+        Entry<ContentClassification,String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourcePath(resourceType, whitelistedResourcePathPatterns);
         if (!classificationAndRemark.getKey().isAllowed(ContentUsage.REFERENCE)) {
             return getSimpleFileViolationMessage(ContentUsage.REFERENCE, resourceType, classificationAndRemark.getKey(), classificationAndRemark.getValue());
         } else {
@@ -247,13 +252,14 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
         return severity != null ? severity : defaultSeverity;
     }
 
+    
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((classificationMap == null) ? 0 : classificationMap.hashCode());
         result = prime * result + ((defaultSeverity == null) ? 0 : defaultSeverity.hashCode());
-        result = prime * result + ((resourceTypeWhitelist == null) ? 0 : resourceTypeWhitelist.hashCode());
+        result = prime * result + ((whitelistedResourcePaths == null) ? 0 : whitelistedResourcePaths.hashCode());
         result = prime * result + ((severityPerClassification == null) ? 0 : severityPerClassification.hashCode());
         return result;
     }
@@ -274,10 +280,10 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
             return false;
         if (defaultSeverity != other.defaultSeverity)
             return false;
-        if (resourceTypeWhitelist == null) {
-            if (other.resourceTypeWhitelist != null)
+        if (whitelistedResourcePaths == null) {
+            if (other.whitelistedResourcePaths != null)
                 return false;
-        } else if (!resourceTypeWhitelist.equals(other.resourceTypeWhitelist))
+        } else if (!whitelistedResourcePaths.equals(other.whitelistedResourcePaths))
             return false;
         if (severityPerClassification == null) {
             if (other.severityPerClassification != null)
@@ -290,7 +296,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     @Override
     public String toString() {
         return "AemClassificationValidator [" + (classificationMap != null ? "classificationMap=" + classificationMap + ", " : "")
-                + (resourceTypeWhitelist != null ? "resourceTypeWhitelist=" + resourceTypeWhitelist + ", " : "")
+                + (whitelistedResourcePaths != null ? "resourceTypeWhitelist=" + whitelistedResourcePaths + ", " : "")
                 + (severityPerClassification != null ? "severityPerClassification=" + severityPerClassification + ", " : "")
                 + (defaultSeverity != null ? "defaultSeverity=" + defaultSeverity : "") + "]";
     }

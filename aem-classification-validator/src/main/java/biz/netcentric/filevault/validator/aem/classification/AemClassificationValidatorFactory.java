@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -44,8 +45,8 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
     /** URL of the classifier map, could start with file: for filesystem based maps, or start with tccl: for thread-context classloader
      * resource based maps. Also all other known protocols are supported */
     private static final String OPTION_MAPS = "maps";
-    /** optional list of comma-separated resource types (should be absolute) */
-    private static final String OPTION_WHITELISTED_RESOURCE_TYPES = "whiteListedResourceTypes";
+    /** optional list of comma-separated resource path patterns (should be absolute) */
+    private static final String OPTION_WHITELISTED_RESOURCE_PATH_PATTERNS = "whitelistedResourcePathsPatterns";
     private static final Object OPTION_SEVERITIES_PER_CLASSIFICATION = "severitiesPerClassification";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AemClassificationValidatorFactory.class);
@@ -57,11 +58,10 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
         if (StringUtils.isBlank(mapUrls)) {
             throw new IllegalArgumentException("Mandatory option " + OPTION_MAPS + " missing!");
         }
-        String optionWhitelist = settings.getOptions().get(OPTION_WHITELISTED_RESOURCE_TYPES);
+        String optionWhitelistedResourcePaths = settings.getOptions().get(OPTION_WHITELISTED_RESOURCE_PATH_PATTERNS);
 
-        Collection<String> contentClassificationResourceTypeWhitelist = StringUtils.isNotBlank(optionWhitelist)
-                ? Arrays.asList(optionWhitelist.split(","))
-                : Collections.emptyList();
+        Collection<String> contentClassificationResourceTypeWhitelist = 
+                Optional.ofNullable(optionWhitelistedResourcePaths).map(op -> Arrays.asList(op.split(","))).orElse(Collections.emptyList());
 
         try {
             ContentClassificationMapper map = null;

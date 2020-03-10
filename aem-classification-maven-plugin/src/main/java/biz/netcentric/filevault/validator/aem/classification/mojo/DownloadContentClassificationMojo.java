@@ -196,7 +196,7 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
             for (Map<String, Object> result : (List<Map<String, Object>>)results) {
                 String resourceType = (String)result.get("jcr:path");
                 // override classification in case any usage is allowed!
-                ContentClassification classification = map.getContentClassificationAndRemarkForResourceType(resourceType, null).getKey();
+                ContentClassification classification = map.getContentClassificationAndRemarkForResourcePath(resourceType, null).getKey();
                 if (classification.isAllowed(allContentUsages)) {
                     classification = ContentClassification.INTERNAL_DEPRECATED_ANNOTATION;
                 }

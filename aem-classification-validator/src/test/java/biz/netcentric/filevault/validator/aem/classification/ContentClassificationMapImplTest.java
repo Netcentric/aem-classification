@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.regex.Pattern;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -64,21 +65,21 @@ public class ContentClassificationMapImplTest {
         map.put("/libs/sometype", ContentClassification.FINAL, null);
         map.put("/libs/whitelisted", ContentClassification.INTERNAL, "internal");
         map.put("/", ContentClassification.PUBLIC, null);
-        Collection<String> whitelistedResourceType = Collections.singleton("/libs/whitelisted");
-        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.FINAL, "someremark"), map.getContentClassificationAndRemarkForResourceType("/sometype", whitelistedResourceType));
-        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.INTERNAL_CHILD, "someremark"), map.getContentClassificationAndRemarkForResourceType("/sometype/somechild", whitelistedResourceType));
-        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.ABSTRACT, "test"), map.getContentClassificationAndRemarkForResourceType("/sometype/someotherchild", whitelistedResourceType));
-        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.FINAL, null), map.getContentClassificationAndRemarkForResourceType("sometype", whitelistedResourceType)); // "/libs" is implicitly prepended
-        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.PUBLIC, null), map.getContentClassificationAndRemarkForResourceType("whitelisted", whitelistedResourceType)); // whitelisted resource type
-        // make sure that whitelisting only affects the given resource type but no children
-        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.INTERNAL, "internal"), map.getContentClassificationAndRemarkForResourceType("whitelisted/child", whitelistedResourceType));
-        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.PUBLIC, null), map.getContentClassificationAndRemarkForResourceType("/", whitelistedResourceType));
+        Collection<Pattern> whitelistedResourceType = Collections.singleton(Pattern.compile("/libs/whitelisted"));
+        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.FINAL, "someremark"), map.getContentClassificationAndRemarkForResourcePath("/sometype", whitelistedResourceType));
+        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.INTERNAL_CHILD, "someremark"), map.getContentClassificationAndRemarkForResourcePath("/sometype/somechild", whitelistedResourceType));
+        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.ABSTRACT, "test"), map.getContentClassificationAndRemarkForResourcePath("/sometype/someotherchild", whitelistedResourceType));
+        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.FINAL, null), map.getContentClassificationAndRemarkForResourcePath("sometype", whitelistedResourceType)); // "/libs" is implicitly prepended
+        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.PUBLIC, null), map.getContentClassificationAndRemarkForResourcePath("whitelisted", whitelistedResourceType)); // whitelisted resource type
+        // make sure that whitelisting only affects the given resource type but no children (really?)
+        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.INTERNAL, "internal"), map.getContentClassificationAndRemarkForResourcePath("whitelisted/child", whitelistedResourceType));
+        assertEquals(new SimpleEntry<ContentClassification, String>(ContentClassification.PUBLIC, null), map.getContentClassificationAndRemarkForResourcePath("/", whitelistedResourceType));
     }
 
     @Test
     public void testGetContentClassificationForResourceTypeWithoutClassification() {
         ContentClassificationMapper map = new ContentClassificationMapperImpl("somelabel");
-        Assertions.assertThrows(IllegalStateException.class,() -> { map.getContentClassificationAndRemarkForResourceType("/sometype", null); });
+        Assertions.assertThrows(IllegalStateException.class,() -> { map.getContentClassificationAndRemarkForResourcePath("/sometype", null); });
     }
 
     
@@ -86,14 +87,14 @@ public class ContentClassificationMapImplTest {
     public void testGetContentClassificationForInvalidResourceType() {
         ContentClassificationMapper map = new ContentClassificationMapperImpl("somelabel");
         map.put("/sometype", ContentClassification.FINAL, "someremark");
-        Assertions.assertThrows(IllegalStateException.class,() -> { map.getContentClassificationAndRemarkForResourceType("/sometype/", null); });
+        Assertions.assertThrows(IllegalStateException.class,() -> { map.getContentClassificationAndRemarkForResourcePath("/sometype/", null); });
     }
 
     @Test
     public void testGetContentClassificationForEmptyResourceType() {
         ContentClassificationMapper map = new ContentClassificationMapperImpl("somelabel");
         map.put("/sometype", ContentClassification.FINAL, "someremark");
-        Assertions.assertEquals(new SimpleEntry<>(ContentClassification.PUBLIC, null), map.getContentClassificationAndRemarkForResourceType("", null));
+        Assertions.assertEquals(new SimpleEntry<>(ContentClassification.PUBLIC, null), map.getContentClassificationAndRemarkForResourcePath("", null));
     }
 
     @Test

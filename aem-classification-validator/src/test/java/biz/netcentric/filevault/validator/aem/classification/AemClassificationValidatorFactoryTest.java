@@ -68,13 +68,13 @@ public class AemClassificationValidatorFactoryTest {
         AemClassificationValidatorFactory factory = new AemClassificationValidatorFactory();
         Map<String, String> options = new HashMap<>();
         options.put("maps", "tccl:valid-classification.map");
-        options.put("whiteListedResourceTypes", "/resourceType1,/resourceType2");
+        options.put("whitelistedResourcePathsPatterns", "/resourceType1/.*,/resourceType2");
         options.put("severitiesPerClassification", "INTERNAL=DEBUG");
         ValidatorSettings settings = new ValidatorSettingsImpl(false, ValidationMessageSeverity.WARN, options);
         ContentClassificationMapper map = new ContentClassificationMapperImpl("Simple");
         map.put("/test", ContentClassification.INTERNAL_DEPRECATED, "Deprecated");
         Collection<String> whiteListedResourceTypes = new LinkedList<>();
-        whiteListedResourceTypes.add("/resourceType1");
+        whiteListedResourceTypes.add("/resourceType1/.*");
         whiteListedResourceTypes.add("/resourceType2");
         Map<ContentClassification, ValidationMessageSeverity> severitiesPerClassification = new HashMap<>();
         severitiesPerClassification.put(ContentClassification.INTERNAL, ValidationMessageSeverity.DEBUG);

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,10 +29,10 @@ public interface ContentClassificationMapper {
 
     /**
      * Returns the classification for the given resource type.
-     * @param resourceType
+     * @param resourcePath the absolute resource path
      * @return the classification and the optional remark belonging to the given resource type
      */
-    @NotNull Entry<ContentClassification, String> getContentClassificationAndRemarkForResourceType(@NotNull String resourceType, @Nullable Collection<String> whitelistedResourceTypes);
+    @NotNull Entry<ContentClassification, String> getContentClassificationAndRemarkForResourcePath(@NotNull String resourcePath, @Nullable Collection<Pattern> whitelistedResourcePaths);
 
     /**
      * Writes the map to a given output stream.
@@ -41,13 +42,15 @@ public interface ContentClassificationMapper {
      * @throws IOException
      */
     void write(@NotNull OutputStream inputStream) throws IOException;
+
     /**
      * Adds a new entry to the classification map.
-     * @param resourceType the resource type
+     * @param resourcePath the absolute resource path
      * @param classification the classification
      * @param remark the optional remark (may be null)
      */
-    void put(@NotNull String resourceType, @NotNull ContentClassification classification, @Nullable String remark);
+    void put(@NotNull String resourcePath, @NotNull ContentClassification classification, @Nullable String remark);
+
     /**
      * Returns the number of entries in this map.
      * @return the number of entries
