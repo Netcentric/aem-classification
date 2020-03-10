@@ -9,7 +9,7 @@ The classification map is available at Maven Central with the following coordina
 
 Group ID | Artifact ID | Version 
 --- | --- | ---
-`biz.netcentric.filevault.validator.maps` | `aem-classification-map-deprecations` | `1.0.0-SNAPHOT`
+`biz.netcentric.filevault.validator.maps` | `aem-classification-map-deprecations` | `6.5.0.0-SNAPHOT`
 
 The following files are provided in that artifact:
 

@@ -113,12 +113,6 @@
             <scope>provided</scope><!-- annotations are needed only to build the plugin -->
             <version>3.6.0</version>
         </dependency>
-        <!-- for prompting during goal download-content-classification -->
-        <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-interactivity-api</artifactId>
-            <version>1.0-alpha-6</version>
-        </dependency>
         <dependency>
             <groupId>biz.netcentric.filevault.validator</groupId>
             <artifactId>aem-classification-validator</artifactId>

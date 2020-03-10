@@ -9,7 +9,7 @@ Option | Mandatory | Description
 --- | --- | ---
 maps | yes | a comma-separated list of URLs specifying the source for a classification map. Each URL might use the protocols `file:`, for file-based classification maps, `http(s):` for classification maps in the internet or `tccl:` for classification maps being provided via the ThreadContextClassloader. The latter is especially useful with Maven as the TCCL during the execution of a goal of a Maven Plugin is the [Maven Plugin Classpath][4].
 whiteListedResourceTypes | no | a comma-separated list of resource types which should not be reported no matter if they violate content classifications or not
-severitiesPerClassification | no | the severity per classification (this will overwrite the default severity which is by default used for all classifications. The format is `<classification>=<severity>{,<classification>=<severity>}`, where `classification` is one of `INTERNAL`, `INTERNAL_DEPRECATED`, `FINAL` or `ABSTRACT` and `severity` is one of `DEBUG`, `INFO`, `WARN` or `ERROR`.
+severitiesPerClassification | no | the severity per classification (this will overwrite the default severity which is by default used for all classifications. The format is `<classification>=<severity>{,<classification>=<severity>}`, where `classification` is one of `INTERNAL`, `INTERNAL_DEPRECATED_ANNOTATION`, `INTERNAL_DEPRECATED`, `FINAL` or `ABSTRACT` and `severity` is one of `DEBUG`, `INFO`, `WARN` or `ERROR`.
 
 All validation messages are emitted with the [`defaultSeverity`][2]
 
@@ -26,7 +26,18 @@ The file is a CSV serialization of the map where each line represents one item i
 <path>,<classification>(,<remark>)
 ```
 
-where `classification` is one of `INTERNAL`, `INTERNAL_DEPRECATED` (same restrictions as `INTERNAL` but due to being marked as deprecated), `FINAL`, `ABSTRACT`, `PUBLIC` (in order from most restricted to least restricted). The CSV format is based on [RFC-4180][7]. In addition a comment starting with `#` on the first line is supposed to contain a label for the map (like the underlying AEM version). `path` is supposed to be an absolute repository path of a specific component.
+where `classification` is one of 
+
+1. `INTERNAL`
+2. `INTERNAL_DEPRECATED_ANNOTATION`, same restrictions as `INTERNAL` but due to being marked as deprecated via some annotation e.g. `cq:deprecated` property
+3. `INTERNAL_DEPRECATED`, same restrictions as `INTERNAL` but due to being marked as deprecated in some external sources like release notes
+4. `FINAL`
+5. `ABSTRACT`
+6. `PUBLIC` 
+
+(in order from most restricted to least restricted). 
+The explanation for those can be found in the [Adobe documentation][1].
+The CSV format is based on [RFC-4180][7]. In addition a comment starting with `#` on the first line is supposed to contain a label for the map (like the underlying AEM version). `path` is supposed to be an absolute repository path of a specific component.
 
 # Usage with Maven
 You can use this validator with the [FileVault Package Maven Plugin][3] in version 1.1.0 or higher like this
@@ -85,4 +96,4 @@ There are several reasons:
 [6]: https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/pattern-detector.html
 [7]: https://tools.ietf.org/html/rfc4180
 [8]: https://github.com/Netcentric/aem-classification/aem-classification-maven-plugin
-[9]: ../aem-classification-maps
+[9]: ../aem-classification-maps	

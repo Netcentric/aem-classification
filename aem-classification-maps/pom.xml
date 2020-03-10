@@ -5,7 +5,6 @@
     <artifactId>aem-classification-maps</artifactId>
     <name>AEM Classification Maps</name>
     <description>Classification Maps to be used with the validator</description>
-    <version>6.5.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <parent>
         <groupId>biz.netcentric.filevault.validator</groupId>

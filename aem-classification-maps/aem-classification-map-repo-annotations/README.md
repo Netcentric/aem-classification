@@ -8,7 +8,12 @@ The classification map is available at Maven Central with the following coordina
 
 Group ID | Artifact ID | Version 
 --- | --- | ---
-`biz.netcentric.filevault.validator.maps` | `aem-classification-map-repo-annotations` | `1.0.0-SNAPHOT`
+`biz.netcentric.filevault.validator.maps` | `aem-classification-map-repo-annotations` | `6.5.3.0-SNAPHOT`
+
+The version is consisting out of 4 sections. 
+The first 3 sections give the 
+- AEM on Prem versioning scheme, i.e. 6.5.3 for AEM 6.5 SP3
+- AEM as a CloudService versioning scheme, i.e. 2020.01.0
 
 The following files are provided in that artifact:
 
