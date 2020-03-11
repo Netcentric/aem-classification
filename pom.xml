@@ -34,8 +34,8 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</developerConnection>
+        <connection>scm:git:https://github.com/Netcentric/aem-classification.git</connection>
+        <developerConnection>scm:git:https://github.com/Netcentric/aem-classification.git</developerConnection>
         <url>https://github.com/Netcentric/aem-classification.git</url>
         <tag>HEAD</tag>
     </scm>
