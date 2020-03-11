@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,9 +41,6 @@ import org.apache.jackrabbit.vault.validation.spi.ValidationMessageSeverity;
 import org.apache.sling.api.SlingConstants;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AemClassificationValidator implements DocumentViewXmlValidator, GenericJcrDataValidator, NodePathValidator {
 
@@ -89,8 +85,6 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
 
     private @NotNull ValidationMessageSeverity defaultSeverity;
     private final Collection<String> overlaidNodePaths;
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(AemClassificationValidator.class);
 
     // TODO: warn of usage in ancestor nodes with a different severity?
     public AemClassificationValidator(@NotNull ValidationMessageSeverity defaultSeverity, @NotNull ContentClassificationMapper classificationMap, @NotNull Collection<String> whitelistedResourcePaths, @NotNull Map<ContentClassification, ValidationMessageSeverity> severityPerClassification) {

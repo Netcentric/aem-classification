@@ -81,7 +81,7 @@ public class ContentClassificationMapperImpl implements ContentClassificationMap
                 throw new IllegalArgumentException("Error in line " + record.getRecordNumber()
                         + ": Missing ',' character. At least 2 values have to be given per line!");
             }
-            String resourceType = record.get(0);
+            String resourcePath = record.get(0);
             ContentClassification classification = Enum.valueOf(ContentClassification.class, record.get(1));
             final String remark;
             // a third part may contain hints (separated from second part with ":")
@@ -93,7 +93,7 @@ public class ContentClassificationMapperImpl implements ContentClassificationMap
                 }
                 remark = null;
             }
-            put(resourceType, classification, remark);
+            put(resourcePath, classification, remark);
         }
     }
 
