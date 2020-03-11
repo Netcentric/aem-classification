@@ -1,8 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>biz.netcentric.filevault.validator</groupId>
     <artifactId>aem-classification</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>AEM Classification Reactor</name>
     <description>Reactor project building both the FileVault validator and the Maven Plugin</description>
@@ -36,7 +37,7 @@
         <connection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</developerConnection>
         <url>https://github.com/Netcentric/aem-classification.git</url>
-        <tag>aem-classification-1.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
