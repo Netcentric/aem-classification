@@ -248,6 +248,20 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- always generate javadoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-javadoc</id>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
@@ -294,7 +308,6 @@
         </plugins>
     </build>
     <profiles>
-
         <profile>
             <id>release</id>
             <activation>

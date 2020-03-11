@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * map and has the format
  * 
  * <pre>
- * &#60;path&#62;,&#60;classification&#62{,&#60;remark&#62;}
+ * &#60;path&#62;,&#60;classification&#62;{,&#60;remark&#62;}
  * </pre>
  * 
  * where {@code classification} is one of {@link ContentClassification}. The CSV format is

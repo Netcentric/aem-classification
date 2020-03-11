@@ -71,8 +71,8 @@ public enum ContentClassification {
 
     /**
      * 
-     * @param contentUsages
-     * @return only {@true} in case all {@link contentUsages} are allowed
+     * @param contentUsages the usages to check for
+     * @return only {@code true} in case all {@code contentUsages} are allowed
      */
     public boolean isAllowed(EnumSet<ContentUsage> contentUsages) {
         return Collections.disjoint(disallowedUsages, contentUsages);
