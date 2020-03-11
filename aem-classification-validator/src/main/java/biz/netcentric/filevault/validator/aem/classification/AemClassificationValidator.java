@@ -88,9 +88,11 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     private final Map<ContentClassification, ValidationMessageSeverity> severityPerClassification;
 
     private @NotNull ValidationMessageSeverity defaultSeverity;
+    private final Collection<String> overlaidNodePaths;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(AemClassificationValidator.class);
 
+    // TODO: warn of usage in ancestor nodes with a different severity?
     public AemClassificationValidator(@NotNull ValidationMessageSeverity defaultSeverity, @NotNull ContentClassificationMapper classificationMap, @NotNull Collection<String> whitelistedResourcePaths, @NotNull Map<ContentClassification, ValidationMessageSeverity> severityPerClassification) {
         super();
         this.defaultSeverity = defaultSeverity;
@@ -98,6 +100,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
         this.whitelistedResourcePaths = whitelistedResourcePaths;
         this.whitelistedResourcePathPatterns = whitelistedResourcePaths.stream().map(Pattern::compile).collect(Collectors.toList());
         this.severityPerClassification = severityPerClassification;
+        this.overlaidNodePaths = new LinkedList<>();
     }
 
     public Collection<ValidationMessage> done() {
@@ -105,70 +108,11 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     }
 
     @Override
-    public Collection<ValidationMessage> validate(@NotNull DocViewNode node, @NotNull String nodePath, @NotNull Path filePath, boolean isRoot) {
-        Collection<ValidationMessage> messages = new LinkedList<>();
-        // attributes resourceType ...
-        String usedResource = node.getValue(SLING_RESOURCE_TYPE_PROPERTY_NAME);
-        if (usedResource != null) {
-            Entry<ContentClassification,String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourcePath(usedResource, whitelistedResourcePathPatterns);
-            if (!classificationAndRemark.getKey().isAllowed(ContentUsage.REFERENCE)) {
-                messages.add(getDocviewViolationMessage(node.label, ContentUsage.REFERENCE, usedResource, classificationAndRemark.getKey(), classificationAndRemark.getValue()));
-            }
-        }
-
-        // ... and resourceSuperType are considered
-        String superResource = node.getValue(SLING_RESOURCE_SUPER_TYPE_PROPERTY_NAME);
-        if (superResource != null) {
-            Entry<ContentClassification,String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourcePath(superResource, whitelistedResourcePathPatterns);
-            if (!classificationAndRemark.getKey().isAllowed(ContentUsage.INHERIT)) {
-                messages.add(getDocviewViolationMessage(node.label, ContentUsage.INHERIT, superResource, classificationAndRemark.getKey(), classificationAndRemark.getValue()));
-            }
-        }
-
-        // check overlays in addition
-        OverlayViolation violation = getOverlayViolation(nodePath);
-        if (violation != null) {
-            messages.add(getDocviewViolationMessage(node.label, ContentUsage.OVERLAY, violation.overlaidResourceType, violation.classification, violation.remark));
-        }
-        // TODO: check usage of clientlib dependencies/embeds
-        return messages;
-    }
-
-    private final class OverlayViolation {
-        private final ContentClassification classification;
-        private final String overlaidResourceType;
-        private final String remark;
-        
-        public OverlayViolation(ContentClassification classification, String overlaidResourceType, String remark) {
-            super();
-            this.classification = classification;
-            this.overlaidResourceType = overlaidResourceType;
-            this.remark = remark;
-        }
-    }
-    /**
-     * 
-     * @param path
-     * @return the overlaid path and a classification for that path only in case the given overlay violates it, otherwise {@code null}.
-     */
-    private OverlayViolation getOverlayViolation(String path) {
-        if (!path.startsWith("/apps/")) {
-            return null; // this is not an overlay at all, therefore no violation
-        }
-        // is this an overlay?
-        String overlaidResource = "/libs/" + path.substring("/apps/".length());
-        Entry<ContentClassification, String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourcePath(overlaidResource, whitelistedResourcePathPatterns);
-        if (classificationAndRemark.getKey().isAllowed(ContentUsage.OVERLAY)) {
-            return null;
-        }
-        return new OverlayViolation(classificationAndRemark.getKey(), overlaidResource, classificationAndRemark.getValue());
-    }
-
-    @Override
     public Collection<ValidationMessage> validate(@NotNull String path) {
         // check overlay usage in addition for non-docview files
         OverlayViolation violation = getOverlayViolation(path);
-        if (violation != null) {
+        if (violation != null && !overlaidNodePaths.contains(path)) {
+            overlaidNodePaths.add(path);
             return Collections.singleton(getSimpleFileViolationMessage(ContentUsage.OVERLAY, violation.overlaidResourceType, violation.classification, violation.remark));
         } else {
             return null;
@@ -210,6 +154,67 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
         return messages;
     }
 
+    @Override
+    public Collection<ValidationMessage> validate(@NotNull DocViewNode node, @NotNull String nodePath, @NotNull Path filePath, boolean isRoot) {
+        Collection<ValidationMessage> messages = new LinkedList<>();
+        // attributes resourceType ...
+        String usedResource = node.getValue(SLING_RESOURCE_TYPE_PROPERTY_NAME);
+        if (usedResource != null) {
+            Entry<ContentClassification,String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourcePath(usedResource, whitelistedResourcePathPatterns);
+            if (!classificationAndRemark.getKey().isAllowed(ContentUsage.REFERENCE)) {
+                messages.add(getDocviewViolationMessage(node.label, ContentUsage.REFERENCE, usedResource, classificationAndRemark.getKey(), classificationAndRemark.getValue()));
+            }
+        }
+
+        // ... and resourceSuperType are considered
+        String superResource = node.getValue(SLING_RESOURCE_SUPER_TYPE_PROPERTY_NAME);
+        if (superResource != null) {
+            Entry<ContentClassification,String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourcePath(superResource, whitelistedResourcePathPatterns);
+            if (!classificationAndRemark.getKey().isAllowed(ContentUsage.INHERIT)) {
+                messages.add(getDocviewViolationMessage(node.label, ContentUsage.INHERIT, superResource, classificationAndRemark.getKey(), classificationAndRemark.getValue()));
+            }
+        }
+
+        // check overlays in addition
+        OverlayViolation violation = getOverlayViolation(nodePath);
+        if (violation != null && !overlaidNodePaths.contains(nodePath)) {
+            messages.add(getDocviewViolationMessage(node.label, ContentUsage.OVERLAY, violation.overlaidResourceType, violation.classification, violation.remark));
+            overlaidNodePaths.add(nodePath);
+        }
+        // TODO: check usage of clientlib dependencies/embeds
+        return messages;
+    }
+
+    private final class OverlayViolation {
+        private final ContentClassification classification;
+        private final String overlaidResourceType;
+        private final String remark;
+        
+        public OverlayViolation(ContentClassification classification, String overlaidResourceType, String remark) {
+            super();
+            this.classification = classification;
+            this.overlaidResourceType = overlaidResourceType;
+            this.remark = remark;
+        }
+    }
+    /**
+     * 
+     * @param path
+     * @return the overlaid path and a classification for that path only in case the given overlay violates it, otherwise {@code null}.
+     */
+    private OverlayViolation getOverlayViolation(String path) {
+        if (!path.startsWith("/apps/")) {
+            return null; // this is not an overlay at all, therefore no violation
+        }
+        // is this an overlay?
+        String overlaidResource = "/libs/" + path.substring("/apps/".length());
+        Entry<ContentClassification, String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourcePath(overlaidResource, whitelistedResourcePathPatterns);
+        if (classificationAndRemark.getKey().isAllowed(ContentUsage.OVERLAY)) {
+            return null;
+        }
+        return new OverlayViolation(classificationAndRemark.getKey(), overlaidResource, classificationAndRemark.getValue());
+    }
+
     private ValidationMessage validateResourceTypeUsage(String resourceType) {
         Entry<ContentClassification,String> classificationAndRemark = classificationMap.getContentClassificationAndRemarkForResourcePath(resourceType, whitelistedResourcePathPatterns);
         if (!classificationAndRemark.getKey().isAllowed(ContentUsage.REFERENCE)) {
@@ -228,8 +233,8 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     }
 
     /** Pattern to be used with {@link String#format(String, Object...)} */
-    static final String DOCVIEW_VIOLATION_MESSAGE_STRING = "Element with name \"%s\" %s resource type '%s' which is marked as '%s'. It therefore violates the content classification!";
-    static final String SIMPLEFILE_VIOLATION_MESSAGE_STRING = "This file %s resource type '%s' which is marked as '%s'. It therefore violates the content classification!";
+    static final String DOCVIEW_VIOLATION_MESSAGE_STRING = "Element with name \"%s\" %s resource '%s' which is marked as '%s'. It therefore violates the content classification!";
+    static final String SIMPLEFILE_VIOLATION_MESSAGE_STRING = "This file %s resource '%s' which is marked as '%s'. It therefore violates the content classification!";
     @NotNull ValidationMessage getDocviewViolationMessage(String label, ContentUsage usage, String targetResourceType, ContentClassification classification, String remark) {
         String message = extendMessageWithRemark(String.format(DOCVIEW_VIOLATION_MESSAGE_STRING, label, usage.getLabel(), targetResourceType, classification.getLabel()), remark);
         return new ValidationMessage(getSeverityForClassification(classification), message);
