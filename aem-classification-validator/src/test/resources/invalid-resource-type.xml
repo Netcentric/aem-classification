@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    jcr:primaryType="cq:Component"
+    componentGroup="heroparsys"
+    jcr:title="NC Hero"
+    imageDelegate="nc/website/components/content/image"
+    sling:resourceSuperType="core/wcm/components/teaser/v1/teaser/"
+    jcr:description="Displays a big headline, a subtitle and one or two buttons with a background image"/>

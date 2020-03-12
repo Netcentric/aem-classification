@@ -42,6 +42,8 @@ import org.apache.jackrabbit.vault.validation.spi.ValidationMessageSeverity;
 import org.apache.jackrabbit.vault.validation.spi.ValidatorSettings;
 import org.apache.jackrabbit.vault.validation.spi.impl.DocumentViewParserValidator;
 import org.apache.jackrabbit.vault.validation.spi.impl.DocumentViewParserValidatorFactory;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -118,7 +120,14 @@ public class AemClassificationValidatorTest {
          );
     }
 
-  
+    @Test
+    public void testReferencingWithTrailingSlashesInDocviewXml()
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, FileSystemException {
+        Assertions.assertEquals(Collections.singletonList(
+                new ValidationViolation("myId", ValidationMessageSeverity.ERROR, "Resource path must not end with '/' but is 'core/wcm/components/teaser/v1/teaser/'", EXAMPLE_DOCVIEW_PATH, Paths.get(""), "/apps/example", 8, 107, null)
+                ), validateJcrDocView(validator, "myId", "/invalid-resource-type.xml", EXAMPLE_DOCVIEW_PATH));
+    }
+
     @Test
     public void testInheritingViolationsInDocviewXml()
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, FileSystemException {
@@ -156,10 +165,10 @@ public class AemClassificationValidatorTest {
         assertNull(validator.validate("/apps/abstract"));
         assertNull(validator.validate("/apps/abstract/test11"));
         assertNull(validator.validate("/apps/abstract/test12"));
-        assertEquals(Collections.singleton(validator.getSimpleFileViolationMessage(ContentUsage.OVERLAY, "/libs/final", ContentClassification.FINAL, "finalremark")), validator.validate("/apps/final"));
-        assertEquals(Collections.singleton(validator.getSimpleFileViolationMessage(ContentUsage.OVERLAY, "/libs/final/test21", ContentClassification.INTERNAL_CHILD, "finalremark")), validator.validate("/apps/final/test21"));
-        assertEquals(Collections.singleton(validator.getSimpleFileViolationMessage(ContentUsage.OVERLAY, "/libs/internal", ContentClassification.INTERNAL, "internalremark")), validator.validate("/apps/internal"));
-        assertEquals(Collections.singleton(validator.getSimpleFileViolationMessage(ContentUsage.OVERLAY, "/libs/internal/test21",ContentClassification.INTERNAL,  "internalremark")), validator.validate("/apps/internal/test21"));
+        assertEquals(Collections.singleton(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.OVERLAY, "/libs/final", ContentClassification.FINAL, "finalremark")), validator.validate("/apps/final"));
+        assertEquals(Collections.singleton(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.OVERLAY, "/libs/final/test21", ContentClassification.INTERNAL_CHILD, "finalremark")), validator.validate("/apps/final/test21"));
+        assertEquals(Collections.singleton(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.OVERLAY, "/libs/internal", ContentClassification.INTERNAL, "internalremark")), validator.validate("/apps/internal"));
+        assertEquals(Collections.singleton(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.OVERLAY, "/libs/internal/test21",ContentClassification.INTERNAL,  "internalremark")), validator.validate("/apps/internal/test21"));
         assertNull(validator.validate("/apps/public"));
         assertNull(validator.validate("/apps/public/test41"));
 
@@ -172,7 +181,7 @@ public class AemClassificationValidatorTest {
         try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("htl-example.html")) {
             Collection<ValidationMessage> messages = validator.validateJcrData(input, SIMPLEFILE_HTL_PATH, new HashMap<String, Integer>());
             // and check violations
-            assertEquals(Collections.singletonList(validator.getSimpleFileViolationMessage(ContentUsage.REFERENCE, "/libs/abstract/test",  ContentClassification.ABSTRACT, "abstractremark")), messages);
+            assertEquals(Collections.singletonList(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.REFERENCE, "/libs/abstract/test",  ContentClassification.ABSTRACT, "abstractremark")), messages);
         }
     }
 
@@ -204,7 +213,7 @@ public class AemClassificationValidatorTest {
         Collection<ValidationMessage> actualMessages = validateJcrDocView(validator, "myid", name, path);
         Collection<ValidationViolation> expectedMessages = Arrays.stream(violations).map(a -> 
             ValidationViolation.wrapMessage("myid", 
-                    validator.getDocviewViolationMessage(a.name, a.usage, a.targetResourceType, a.classification, a.remark),
+                    getDocviewViolationMessage(ValidationMessageSeverity.ERROR, a.name, a.usage, a.targetResourceType, a.classification, a.remark),
                     path, Paths.get(""), a.nodePath, a.line, a.column)).collect(Collectors.toList());
         
         assertEquals(expectedMessages, actualMessages);
@@ -219,5 +228,18 @@ public class AemClassificationValidatorTest {
             Collection<ValidationMessage> allMessages = docViewValidator.validateJcrData(input, filePath, nodePathsAndLineNumbers);
             return allMessages.stream().filter(a -> a.getSeverity().ordinal() >= ValidationMessageSeverity.ERROR.ordinal()).collect(Collectors.toList());
         }
+    }
+
+    /** Pattern to be used with {@link String#format(String, Object...)} */
+    static final String DOCVIEW_VIOLATION_MESSAGE_STRING = "Element with name \"%s\" %s resource '%s' which is marked as '%s'. It therefore violates the content classification!";
+    static final String SIMPLEFILE_VIOLATION_MESSAGE_STRING = "This file %s resource '%s' which is marked as '%s'. It therefore violates the content classification!";
+    static @NotNull ValidationMessage getDocviewViolationMessage(ValidationMessageSeverity severity, String label, ContentUsage usage, String targetResourceType, ContentClassification classification, String remark) {
+        String message = AemClassificationValidator.extendMessageWithRemark(String.format(DOCVIEW_VIOLATION_MESSAGE_STRING, label, usage.getLabel(), targetResourceType, classification.getLabel()), remark);
+        return new ValidationMessage(severity, message);
+    }
+
+    
+    static @NotNull ValidationMessage  getSimpleFileViolationMessage(ValidationMessageSeverity severity, ContentUsage usage, String resourceType, ContentClassification classification, String remark) {
+        return new ValidationMessage(severity, AemClassificationValidator.extendMessageWithRemark(String.format(SIMPLEFILE_VIOLATION_MESSAGE_STRING, usage.getLabel(), resourceType, classification.getLabel()), remark));
     }
 }
