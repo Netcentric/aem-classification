@@ -140,12 +140,12 @@
                 <!-- ====================================================================== -->
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.8.2</version>
+                    <version>3.9.0</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.apache.maven.doxia</groupId>
                             <artifactId>doxia-module-markdown</artifactId>
-                            <version>1.9</version>
+                            <version>1.9.1</version>
                         </dependency>
                         <dependency>
                             <groupId>org.apache.maven.skins</groupId>
