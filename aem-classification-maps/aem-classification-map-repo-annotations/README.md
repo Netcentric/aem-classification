@@ -6,9 +6,9 @@ It has been generated with the [Maven Plugin][2].
 # Details
 The classification map is available [at Maven Central][3] with the following coordinates:
 
-Group ID | Artifact ID | Version 
---- | --- | ---
-`biz.netcentric.filevault.validator.maps` | `aem-classification-map-repo-annotations` | `6.5.3.0-SNAPHOT`
+Group ID | Artifact ID
+--- | --- 
+`biz.netcentric.filevault.validator.maps` | `aem-classification-map-repo-annotations`
 
 
 The version is consisting out of 4 parts.
