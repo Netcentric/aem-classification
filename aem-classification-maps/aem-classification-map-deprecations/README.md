@@ -10,7 +10,7 @@ Feel free to provide additional deprecations via PRs for arbitrary AEM versions.
 The classification map is available at [Maven Central][2] with the following coordinates:
 
 Group ID | Artifact ID
---- | --- | ---
+--- | ---
 `biz.netcentric.filevault.validator.maps` | `aem-classification-map-deprecations`
 
 Please check which versions are [available][2] and combine multiple versions to also detect deprecations from previous AEM versions. The maps are versioned with the same schema as the underlying AEM version from which the deprecation was derived.
