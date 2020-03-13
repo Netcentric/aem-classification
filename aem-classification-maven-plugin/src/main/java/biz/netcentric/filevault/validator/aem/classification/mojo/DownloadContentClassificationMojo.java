@@ -49,10 +49,10 @@ import biz.netcentric.filevault.validator.aem.classification.ContentClassificati
 import biz.netcentric.filevault.validator.aem.classification.ContentUsage;
 
 /**
- *  Downloads the classification from a remote repository (only works from AEM 6.4+),
- *  serializes it into a map file and wraps that into a JAR file.
+ *  Downloads the classification data from a remote JCR repository (only works with AEM 6.4 or newer),
+ *  serializes it into a map file and optionally wraps that within a JAR file.
  *  <p>
- *  That JAR file still needs to be manually uploaded to Nexus to leverage this classification map from the plugin.
+ *  That JAR file still needs to be manually uploaded to a Maven repository to leverage this classification map from the plugin.
  *  <p>
  *  Uses the JCR search to find the current classification and also deprecation infos from properties "cq:deprecated" and "cq:deprecatedReason"
  *  The search index needs to be setup for that though (property index limited to properties jcr:primaryType and jcr:mixinTypes for node types granite:FinalArea, granite:PublicArea, granite:InternalArea, granite:AbstractArea and another property index for properties cq:deprecated for any node type)
