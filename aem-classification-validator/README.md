@@ -37,7 +37,7 @@ where `classification` is one of
 
 (in order from most restricted to least restricted). 
 The explanation for those can be found in the [Adobe documentation][1].
-The CSV format is based on [RFC-4180][7]. In addition a comment starting with `#` on the first line is supposed to contain a label for the map (like the underlying AEM version). `path` is supposed to be an absolute path of a specific resource.
+The CSV format is based on [RFC 4180][7]. In addition a comment starting with `#` on the first line is supposed to contain a label for the map (like the underlying AEM version). `path` is supposed to be an absolute path of a specific resource.
 
 # Usage with Maven
 You can use this validator with the [FileVault Package Maven Plugin][3] in version 1.1.0 or higher like this
@@ -63,17 +63,17 @@ You can use this validator with the [FileVault Package Maven Plugin][3] in versi
       <artifactId>aem-classification-validator</artifactId>
       <version>1.0.0</version>
     </dependency>
-      <!-- the dependency containing the actual classification map -->
-      <dependency>
-        <groupId>biz.netcentric.filevault.validator.maps</groupId>
-        <artifactId>aem-classification-map-repo-annotations</artifactId>
-        <version>6.5.3.0</version>
-      </dependency>
-      <dependency>
-        <groupId>biz.netcentric.filevault.validator.maps</groupId>
-        <artifactId>aem-classification-map-deprecations</artifactId>
-        <version>6.5.0.0</version>
-      </dependency>
+    <!-- the dependency containing the actual classification map -->
+    <dependency>
+      <groupId>biz.netcentric.filevault.validator.maps</groupId>
+      <artifactId>aem-classification-map-repo-annotations</artifactId>
+      <version>6.5.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>biz.netcentric.filevault.validator.maps</groupId>
+      <artifactId>aem-classification-map-deprecations</artifactId>
+      <version>6.5.0.0</version>
+    </dependency>
   </dependencies>
 </plugin>
 ```
