@@ -32,15 +32,15 @@ public enum ContentClassification {
     /**
      * Used to mark child content of {@link FINAL}, this is not having a dedicated mixin!
      */
-    INTERNAL_CHILD("granite:InternalArea (via parent content classification)", false, null, ContentUsage.OVERLAY, ContentUsage.INHERIT, ContentUsage.REFERENCE),
+    INTERNAL_CHILD("granite:InternalArea (derived from parent content classification)", false, null, ContentUsage.OVERLAY, ContentUsage.INHERIT, ContentUsage.REFERENCE),
     /**
      * Used to mark content as deprecated (i.e. no access whatsoever allowed) due to cq:deprecated property for areas which are not {@link INTERNAL} or {@link INTERNAL_CHILD} according to their mixins yet!
      */
-    INTERNAL_DEPRECATED_ANNOTATION("granite:InternalArea derived from cq:deprecated property", false, null, ContentUsage.OVERLAY, ContentUsage.INHERIT, ContentUsage.REFERENCE),
+    INTERNAL_DEPRECATED_ANNOTATION("granite:InternalArea (derived from cq:deprecated property)", false, null, ContentUsage.OVERLAY, ContentUsage.INHERIT, ContentUsage.REFERENCE),
     /**
      * Used to mark content as deprecated (i.e. no access whatsoever allowed) for areas which are not {@link INTERNAL} or {@link INTERNAL_CHILD} according to their mixins yet!
      */
-    INTERNAL_DEPRECATED("granite:InternalArea derived deprecation", false, null, ContentUsage.OVERLAY, ContentUsage.INHERIT, ContentUsage.REFERENCE),
+    INTERNAL_DEPRECATED("granite:InternalArea (derived from deprecation)", false, null, ContentUsage.OVERLAY, ContentUsage.INHERIT, ContentUsage.REFERENCE),
     FINAL("granite:FinalArea", true, INTERNAL_CHILD, ContentUsage.OVERLAY, ContentUsage.INHERIT),
     ABSTRACT("granite:AbstractArea", true, null, ContentUsage.REFERENCE), 
     PUBLIC("granite:PublicArea", true, null);
