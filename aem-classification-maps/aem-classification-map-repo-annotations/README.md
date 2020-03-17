@@ -25,6 +25,14 @@ URL| Description
 --- | ---
 `tccl:biz/netcentric/filevault/validator/maps/aem-classification-map-repo-annotations.map` | Contains all classifications and in addition also deprecations from the repository of AEM.
 
+# Known incorrect classifications
+
+All known incorrect classifications in the repo are listed in the table below. Please report others via [Issues](https://github.com/Netcentric/aem-classification/issues).
+
+Path | Wrong Classification | Wrong in version | Reported (and tracked in) 
+--- | --- | --- | ---
+`/libs/cq/workflow/components/pages/model` | `granite:InternalArea` | 6.5.3 and 2020.3.2483 | https://daycare.day.com/content/home/netcentric/netcentric_de/aemasacloudservice/208727.html (CQ-4291242)
+
 [1]: https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/sustainable-upgrades.html#content-classifications
 [2]: ../../aem-classification-maven-plugin/README.md
 [3]: https://search.maven.org/search?q=g:biz.netcentric.filevault.validator.maps%20AND%20a:aem-classification-map-repo-annotations
