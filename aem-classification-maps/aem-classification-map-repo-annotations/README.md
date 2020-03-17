@@ -14,7 +14,7 @@ Group ID | Artifact ID
 The version is consisting out of 4 parts.
 The first 3 parts specify the version of the underlying AEM version
 
-- AEM (on premise, classic, up to version 6.5.x, i.e. `6.5.3` for AEM 6.5 SP3
+- AEM (on premise/AMS), up to version 6.5.x, i.e. `6.5.3` for AEM 6.5 SP3
 - AEM as a Cloud Service with `<YYYY>.<MM>.<BUILD>`, i.e. `2020.01.0`.
 
 Please check [at Maven Central][3] which version is closest to the AEM version you use and pick that one for validation.
