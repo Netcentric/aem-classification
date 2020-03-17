@@ -64,10 +64,25 @@ public class AemClassificationValidatorFactoryTest {
     }
 
     @Test
+    public void testValidateResourcePathPatternWithValidPatterns() {
+        AemClassificationValidatorFactory.validateResourcePathPattern("/libs");
+        AemClassificationValidatorFactory.validateResourcePathPattern("/libs/some/path");
+        AemClassificationValidatorFactory.validateResourcePathPattern(".*/test");
+    }
+
+    @Test
+    public void testValidateResourcePathPatternWithInvalidPatterns() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> AemClassificationValidatorFactory.validateResourcePathPattern("relative/path"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> AemClassificationValidatorFactory.validateResourcePathPattern("/"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> AemClassificationValidatorFactory.validateResourcePathPattern("[^/].*"));
+    }
+
+    @Test
     public void testCreateValidator() {
         AemClassificationValidatorFactory factory = new AemClassificationValidatorFactory();
         Map<String, String> options = new HashMap<>();
         options.put("maps", "tccl:valid-classification.map");
+        // deprecated option for whitelisting
         options.put("whitelistedResourcePathsPatterns", "/resourceType1/.*,/resourceType2");
         options.put("severitiesPerClassification", "INTERNAL=DEBUG");
         ValidatorSettings settings = new ValidatorSettingsImpl(false, ValidationMessageSeverity.WARN, options);
@@ -79,6 +94,14 @@ public class AemClassificationValidatorFactoryTest {
         Map<ContentClassification, ValidationMessageSeverity> severitiesPerClassification = new HashMap<>();
         severitiesPerClassification.put(ContentClassification.INTERNAL, ValidationMessageSeverity.DEBUG);
         AemClassificationValidator expectedValidator = new AemClassificationValidator(ValidationMessageSeverity.WARN, map, whiteListedResourceTypes, severitiesPerClassification);
+        Assertions.assertEquals(expectedValidator, factory.createValidator(null, settings));
+        
+        options = new HashMap<>();
+        options.put("maps", "tccl:valid-classification.map");
+        // new option for whitelisting
+        options.put("whitelistedResourcePathPatterns", "/resourceType1/.*,/resourceType2");
+        options.put("severitiesPerClassification", "INTERNAL=DEBUG");
+        settings = new ValidatorSettingsImpl(false, ValidationMessageSeverity.WARN, options);
         Assertions.assertEquals(expectedValidator, factory.createValidator(null, settings));
     }
     
