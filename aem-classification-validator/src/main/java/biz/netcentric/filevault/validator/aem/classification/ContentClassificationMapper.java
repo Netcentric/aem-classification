@@ -29,7 +29,7 @@ public interface ContentClassificationMapper {
 
     /**
      * Returns the classification for the given resource type.
-     * In case the given {@code resourcePath} matches any of the {@code whiteLilstedResourcePaths} it returns PUBLIC.
+     * In case the given {@code resourcePath} matches any of the {@code whitelistedResourcePaths} it returns PUBLIC.
      * @param resourcePath the absolute resource path
      * @param whitelistedResourcePaths the whitelisted resource paths as regular expression patterns. 
      * @return the classification and the optional remark belonging to the given resource type
