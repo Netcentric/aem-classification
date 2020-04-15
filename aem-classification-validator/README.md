@@ -1,5 +1,5 @@
 ![](https://github.com/Netcentric/aem-classification/workflows/Java%20CI/badge.svg) [![License](https://img.shields.io/badge/License-EPL%201.0-red.svg)](https://opensource.org/licenses/EPL-1.0)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/biz.netcentric.filevault.validator/aem-classification-validator/badge.svg)](https://search.maven.org/search/artifact/biz.netcentric.filevault.validator/aem-classification-validator)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/biz.netcentric.filevault.validator/aem-classification-validator/badge.svg)](https://search.maven.org/artifact/biz.netcentric.filevault.validator/aem-classification-validator)
 
 # Overview
 Validates scripts/components for invalid usage according to [AEMs Content Classification][1]. It is a validator implementation for the [FileVault Validation Module][2] and can be used for example with the [filevault-package-maven-plugin][3].
