@@ -12,7 +12,7 @@ Option | Mandatory | Description
 --- | --- | ---
 maps | yes | a comma-separated list of URLs specifying the source for a classification map. Each URL might use the protocols `file:`, for file-based classification maps, `http(s):` for classification maps in the internet or `tccl:` for classification maps being provided via the ThreadContextClassloader. The latter is especially useful with Maven as the TCCL during the execution of a goal of a Maven Plugin is the [Maven Plugin Classpath][4].
 whitelistedResourcePathPatterns | no | a comma-separated list of regular expressions matching an absolute resource path which should not be reported (no matter if its usage violates content classifications or not). The path is referring to the referenced/inherited/overlaid resource path (not the path containing the reference/supertype/overlay). 
-severitiesPerClassification | no | the severity per classification (this will overwrite the default severity which is by default used for all classifications. The format is `<classification>=<severity>{,<classification>=<severity>}`, where `classification` is one of `INTERNAL`, `INTERNAL_DEPRECATED_ANNOTATION`, `INTERNAL_DEPRECATED`, `FINAL` or `ABSTRACT` and `severity` is one of `DEBUG`, `INFO`, `WARN` or `ERROR`.
+severitiesPerClassification | no | the severity per classification (this will overwrite the default severity which otherwise used for all classifications). The format is `<classification>=<severity>{,<classification>=<severity>}`, where `classification` is one of `INTERNAL`, `INTERNAL_DEPRECATED_ANNOTATION`, `INTERNAL_DEPRECATED`, `FINAL` or `ABSTRACT` and `severity` is one of `DEBUG`, `INFO`, `WARN` or `ERROR`.
 
 All validation messages are emitted with the [`defaultSeverity`][2]
 
@@ -88,8 +88,8 @@ There are several reasons:
 
 1. You should detect violations as early as possible, preferably already in your CI pipeline. The later you detect those the more effort it is to fix.
 2. If you don't care about content classifications
-    3. there is a high chance that you cannot easily upgrade to a newer AEM version (AMS or on-premise)
-    4. it might break with every new [AEM as a Cloud Service][5] release
+   1. there is a high chance that you cannot easily upgrade to a newer AEM version (AMS or on-premise)
+   2. it might break with every new [AEM as a Cloud Service][5] release
 
 [1]: https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/sustainable-upgrades.html#content-classifications
 [2]: https://jackrabbit.apache.org/filevault/validation.html
