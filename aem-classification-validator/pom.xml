@@ -7,9 +7,14 @@
     <parent>
         <groupId>biz.netcentric.filevault.validator</groupId>
         <artifactId>aem-classification</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
+    <scm>
+        <connection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</developerConnection>
+        <url>https://github.com/Netcentric/aem-classification.git</url>
+    </scm>
 
     <dependencies>
         <dependency>
