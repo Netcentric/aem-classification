@@ -115,7 +115,7 @@
         <dependency>
             <groupId>biz.netcentric.filevault.validator</groupId>
             <artifactId>aem-classification-validator</artifactId>
-            <version>${project.version}</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
