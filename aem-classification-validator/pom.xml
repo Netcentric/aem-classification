@@ -2,6 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>aem-classification-validator</artifactId>
     <name>AEM Classification Validator</name>
+    <version>1.0.1-SNAPSHOT</version>
     <description>FileVault validator which verifies that a package complies with the AEM content classifications (https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/sustainable-upgrades.html).</description>
 
     <parent>
