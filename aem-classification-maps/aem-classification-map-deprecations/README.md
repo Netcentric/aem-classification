@@ -1,5 +1,5 @@
 # Overview
-This validator map contains deprecated resource types which are not yet [annotated in the repository][1] but still mentioned in some release notes like
+This classification map contains deprecated resource types which are not (yet) [annotated in the repository][1] but still mentioned in some release notes like
 
 1. <https://docs.adobe.com/content/help/en/experience-manager-65/release-notes/deprecated-removed-features.html>
 1. <https://helpx.adobe.com/experience-manager/6-5/sites/developing/using/reference-materials/granite-ui/api/jcr_root/libs/granite/ui/docs/changelogs.html>
