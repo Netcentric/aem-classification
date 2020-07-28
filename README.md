@@ -7,8 +7,8 @@ This repository comprises of several modules around [AEMs Content Classification
 
 1. [aem-classification-validator][2]: A FileVault validator for AEMs content classification
 1. [aem-classification-maps][3]: Maps containing information about resource type classification. To be used with the validator
-1. [aem-classification-maven-plugin][4]: A Maven plugin to generate validation maps out of repository annotations (i.e. mixin properties)
-1. [aem-classification-search-index-package][5]: Oak index definitions necessary for the Maven plugin to work.
+1. [aem-classification-maven-plugin][4]: A Maven plugin to generate validation maps out of repository annotations (i.e. mixin properties). This is only necessary to generate your own maps (in case the provided ones are not sufficient)
+1. [aem-classification-search-index-package][5]: Oak index definitions necessary for the Maven plugin to work. This is only necessary to generate your own maps (in case the provided ones are not sufficient)
 
 
 [1]: https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/sustainable-upgrades.html#content-classifications
