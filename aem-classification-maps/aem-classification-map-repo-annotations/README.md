@@ -1,5 +1,5 @@
 # Overview
-This validator map contains content classifications derived from the `jcr:mixinTypes` (documented at [Content Classifications][1]) and the properties `cq:deprecated` `cq:deprecatedReason`.
+This classification map contains content classifications derived from the `jcr:mixinTypes` (documented at [Content Classifications][1]) and the properties `cq:deprecated` `cq:deprecatedReason`.
 
 It has been generated with the [Maven Plugin][2].
 
@@ -29,9 +29,10 @@ URL| Description
 
 All known incorrect classifications in the repo are listed in the table below. Please report others via [Issues](https://github.com/Netcentric/aem-classification/issues).
 
-Path | Wrong Classification | Wrong in version | Reported (and tracked in) 
---- | --- | --- | ---
-`/libs/cq/workflow/components/pages/model` | `granite:InternalArea` | 6.5.3 and 2020.3.2483 | https://daycare.day.com/content/home/netcentric/netcentric_de/aemasacloudservice/208727.html (CQ-4291242)
+Path | Wrong Classification | Usage Examples | Wrong in version |  Reported (and tracked in)
+--- | --- | --- | --- | ---
+`/libs/cq/workflow/components/pages/model` | `granite:InternalArea` | Workflow Models | 6.5.3 and 2020.3.2483 | https://daycare.day.com/content/home/netcentric/netcentric_de/aemasacloudservice/208727.html (CQ-4291242) 
+`/libs/cq/dtm-reactor/components/conf/page` | `granite:InternalArea` (via parent) | Launch Cloud Configurations use that artificial resource type | 6.5.3 and 2020.3.2483 | -
 
 [1]: https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/sustainable-upgrades.html#content-classifications
 [2]: ../../aem-classification-maven-plugin/README.md
