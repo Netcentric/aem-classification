@@ -80,7 +80,7 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
         }
         try {
             ContentClassificationMapper map = null;
-            for (String mapUrl : mapUrls.split(",")) {
+            for (String mapUrl : mapUrls.split("\\s*,\\s*")) {
                 try (InputStream input = URLFactory.createURL(mapUrl).openStream()) {
                     if (map == null) {
                         map = new ContentClassificationMapperImpl(input, mapUrl);

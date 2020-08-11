@@ -103,6 +103,14 @@ public class AemClassificationValidatorFactoryTest {
         options.put("severitiesPerClassification", "INTERNAL=DEBUG");
         settings = new ValidatorSettingsImpl(false, ValidationMessageSeverity.WARN, options);
         Assertions.assertEquals(expectedValidator, factory.createValidator(null, settings));
+
+        // test with multiple validation maps including whitespaces in the maps string
+        options = new HashMap<>();
+        options.put("maps", "tccl:valid-classification.map,tccl:empty-map-1.map,\n  \t tccl:empty-map-2.map");
+        options.put("whitelistedResourcePathPatterns", "/resourceType1/.*,/resourceType2");
+        options.put("severitiesPerClassification", "INTERNAL=DEBUG");
+        settings = new ValidatorSettingsImpl(false, ValidationMessageSeverity.WARN, options);
+        Assertions.assertEquals(expectedValidator, factory.createValidator(null, settings));
     }
     
     private static final class ValidatorSettingsImpl implements ValidatorSettings {
