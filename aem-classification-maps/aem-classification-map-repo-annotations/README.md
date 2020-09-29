@@ -11,11 +11,9 @@ Group ID | Artifact ID
 `biz.netcentric.filevault.validator.maps` | `aem-classification-map-repo-annotations`
 
 
-The version is consisting out of 4 parts.
-The first 3 parts specify the version of the underlying AEM version
-
-- AEM (on premise/AMS), up to version 6.5.x, i.e. `6.5.3` for AEM 6.5 SP3
-- AEM as a Cloud Service with `<YYYY>.<MM>.<BUILD>`, i.e. `2020.01.0`.
+The version depends on whether you use Classic or Cloud
+- AEM Classic (on premise/AMS), up to version 6.5.x, i.e. `6.5.3.0` for AEM 6.5 SP3. Always consists out of 4 parts.
+- AEM as a Cloud Service with `<YYYY>.<MM>.<BUILD>`, i.e. `2020.01.0`. Always consists out of 3 parts.
 
 Please check [at Maven Central][3] which version is closest to the AEM version you use and pick that one for validation.
 
