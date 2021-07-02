@@ -1,9 +1,11 @@
-# AEM 2020.3.2483.20200309T125757Z
+# AEM 2021.6.5586.20210628T210726Z
 /,PUBLIC
 /libs/clientlibs/ckeditor,INTERNAL
 /libs/clientlibs/granite,INTERNAL
 /libs/clientlibs/granite/coralui2keys,INTERNAL
 /libs/clientlibs/granite/datavisualization,FINAL
+/libs/core/wcm/components/form/container/v1/container/new,INTERNAL_DEPRECATED_ANNOTATION,"Deprecated since Core Components 2.8.0: The Core Form Container now uses the responsive grid new component by default, overriding this in a proxy will not have an effect."
+/libs/core/wcm/components/form/container/v2/container/new,INTERNAL_DEPRECATED_ANNOTATION,"Deprecated since Core Components 2.8.0: The Core Form Container now uses the responsive grid new component by default, overriding this in a proxy will not have an effect."
 /libs/cq/Page/campaign,INTERNAL
 /libs/cq/address,PUBLIC
 /libs/cq/address/components/addressbook,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
@@ -27,6 +29,10 @@
 /libs/cq/analytics/templates/testandtarget,FINAL
 /libs/cq/analytics/templates/tntframework,FINAL
 /libs/cq/analytics/widgets,INTERNAL
+/libs/cq/analyticsconnector,INTERNAL
+/libs/cq/analyticsconnector/content,PUBLIC
+/libs/cq/azurestorage,INTERNAL
+/libs/cq/azurestorage/content,PUBLIC
 /libs/cq/brightedge,INTERNAL
 /libs/cq/brightedge/content,PUBLIC
 /libs/cq/cloudconfig/components/admin/configpathbrowser,FINAL
@@ -71,26 +77,18 @@
 /libs/cq/core/content/projects/masterproperties,INTERNAL
 /libs/cq/core/content/projects/properties,INTERNAL
 /libs/cq/core/content/projects/showtasks,INTERNAL
-/libs/cq/core/content/projects/showtasks/productiontaskdetails,PUBLIC
-/libs/cq/core/content/projects/showtasks/productreviewtd,PUBLIC
-/libs/cq/core/content/projects/showtasks/retouchtaskdetails,PUBLIC
 /libs/cq/core/content/projects/showtasks/reviewtd,PUBLIC
-/libs/cq/core/content/projects/showtasks/shotlisttaskdetails,PUBLIC
-/libs/cq/core/content/projects/showtasks/uploadshotlisttd,PUBLIC
-/libs/cq/core/content/projects/showtasks/uploadtaskdetails,PUBLIC
 /libs/cq/core/content/projects/showwork,INTERNAL
 /libs/cq/core/content/projects/tasklist,INTERNAL
 /libs/cq/core/content/projects/tasktypes/security,INTERNAL
 /libs/cq/core/content/projects/teampage,INTERNAL
 /libs/cq/core/content/projects/templatelist,INTERNAL
-/libs/cq/core/content/projects/templates/retail-product-photoshoot,PUBLIC
 /libs/cq/core/content/projects/wizard,INTERNAL
 /libs/cq/core/content/projects/workflowwizards/copyrequest,INTERNAL
 /libs/cq/core/content/projects/workflowwizards/default_workflow,INTERNAL
 /libs/cq/core/content/projects/workflowwizards/emailrequest,INTERNAL
 /libs/cq/core/content/projects/workflowwizards/landingpagerequest,INTERNAL
 /libs/cq/core/content/projects/workflowwizards/launchrequest,INTERNAL
-/libs/cq/core/content/projects/workflowwizards/photoshoot,PUBLIC
 /libs/cq/core/content/projects/workflowwizards/sample_team,INTERNAL
 /libs/cq/core/content/projects/worklist,INTERNAL
 /libs/cq/dashboards,INTERNAL
@@ -123,6 +121,7 @@
 /libs/cq/experiencelog,INTERNAL
 /libs/cq/flow,INTERNAL
 /libs/cq/flow/widgets,INTERNAL
+/libs/cq/graphql/sites/admin,INTERNAL
 /libs/cq/gui/components/authoring/allowedcomponents,INTERNAL
 /libs/cq/gui/components/authoring/annotationsbadge,INTERNAL
 /libs/cq/gui/components/authoring/assetfinder,INTERNAL
@@ -157,10 +156,7 @@
 /libs/cq/gui/components/projects/admin/pim,INTERNAL
 /libs/cq/gui/components/projects/admin/pim/clientlibs,INTERNAL
 /libs/cq/gui/components/projects/admin/pim/links,INTERNAL
-/libs/cq/gui/components/projects/admin/pim/taskimage,INTERNAL
-/libs/cq/gui/components/projects/admin/productreviewtd,INTERNAL
 /libs/cq/gui/components/projects/admin/reviewtd,INTERNAL
-/libs/cq/gui/components/projects/admin/shotlistpayload,INTERNAL
 /libs/cq/gui/components/workflow,INTERNAL
 /libs/cq/gui/content/editor,INTERNAL
 /libs/cq/i18n,INTERNAL
@@ -171,7 +167,6 @@
 /libs/cq/personalization/clientlib/personalization/jcarousel,FINAL
 /libs/cq/personalization/clientlib/personalization/kernel,FINAL
 /libs/cq/personalization/clientlib/personalization/legacy,FINAL
-/libs/cq/personalization/clientlib/personalization/select2,FINAL
 /libs/cq/personalization/clientlib/personalization/ui,FINAL
 /libs/cq/personalization/clientlib/targeting,FINAL
 /libs/cq/personalization/components,FINAL
@@ -243,13 +238,6 @@
 /libs/cq/personalization/touch-ui/content/v2,INTERNAL
 /libs/cq/personalization/touch-ui/content/v2/commons,INTERNAL
 /libs/cq/personalization/widgets,INTERNAL
-/libs/cq/projects/createshotlist,FINAL
-/libs/cq/projects/movetoproduction,FINAL
-/libs/cq/projects/photoshootupload,FINAL
-/libs/cq/projects/retoucher,FINAL
-/libs/cq/projects/reviewphotoshoot,FINAL
-/libs/cq/projects/rolebasedtaskstep,FINAL
-/libs/cq/projects/uploadshotlist,FINAL
 /libs/cq/replication/components/youtube,INTERNAL
 /libs/cq/replication/templates/youtube,INTERNAL
 /libs/cq/searchpromote/clientlibs/searchpromote,FINAL
@@ -273,6 +261,8 @@
 /libs/cq/searchpromote/templates/searchpromotescheduler,FINAL
 /libs/cq/searchpromote/widgets,INTERNAL
 /libs/cq/tagging/components/tagcloud,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.5: Should not be used in new projects
+/libs/cq/target,INTERNAL
+/libs/cq/target/content,PUBLIC
 /libs/cq/testandtarget,INTERNAL
 /libs/cq/ups,INTERNAL
 /libs/cq/workflow/admin,INTERNAL
@@ -331,6 +321,7 @@
 /libs/dam/cfm/admin/components/adminpage,INTERNAL
 /libs/dam/cfm/admin/components/assoccontent,INTERNAL
 /libs/dam/cfm/admin/components/authoring,INTERNAL
+/libs/dam/cfm/admin/components/authoring/contenteditor/cfmmultifield,FINAL
 /libs/dam/cfm/admin/components/contentrenderer,INTERNAL
 /libs/dam/cfm/admin/components/datasources,INTERNAL
 /libs/dam/cfm/admin/components/metadata,INTERNAL
@@ -340,9 +331,12 @@
 /libs/dam/cfm/admin/components/shared,INTERNAL
 /libs/dam/cfm/admin/components/v2,INTERNAL
 /libs/dam/cfm/admin/content,INTERNAL
+/libs/dam/cfm/admin/content/v2/createfragment/emptyitem/clientlibs,INTERNAL
 /libs/dam/cfm/admin/migration,INTERNAL
+/libs/dam/cfm/admin/migration/components/savegroup,INTERNAL
 /libs/dam/cfm/clientlibs,INTERNAL
 /libs/dam/cfm/components/associatedassets,INTERNAL
+/libs/dam/cfm/components/cfmpicker/suggestion,INTERNAL
 /libs/dam/cfm/components/cfpicker,FINAL
 /libs/dam/cfm/components/contentfragment,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.5: Should not be used in new projects
 /libs/dam/cfm/components/coral,INTERNAL
@@ -354,11 +348,20 @@
 /libs/dam/cfm/components/renderconditions,INTERNAL
 /libs/dam/cfm/components/v2,INTERNAL
 /libs/dam/cfm/content,INTERNAL
+/libs/dam/cfm/graphql,INTERNAL
+/libs/dam/cfm/headless,INTERNAL
 /libs/dam/cfm/models,INTERNAL
+/libs/dam/cfm/models/editor/components/childfragmentreference,INTERNAL
+/libs/dam/cfm/models/editor/components/contentreference,INTERNAL
+/libs/dam/cfm/models/editor/components/datatypes/datepicker,INTERNAL
+/libs/dam/cfm/models/editor/components/fragmentreference,INTERNAL
+/libs/dam/cfm/models/editor/components/fragmentreference/multifield,INTERNAL
+/libs/dam/cfm/models/editor/components/openprompt,FINAL
 /libs/dam/clientlibs,PUBLIC
 /libs/dam/components,PUBLIC
 /libs/dam/components/assetinsights,INTERNAL
 /libs/dam/components/configurations,INTERNAL
+/libs/dam/components/download,INTERNAL
 /libs/dam/components/drm,INTERNAL
 /libs/dam/components/marketingcloud,INTERNAL
 /libs/dam/components/mediaportal,INTERNAL
@@ -367,6 +370,7 @@
 /libs/dam/components/s7dam/videothumbnaildownloadprocess,FINAL
 /libs/dam/components/s7dam/videouseruploadedthumbnailprocess,FINAL
 /libs/dam/components/scene7/basiczoom,FINAL
+/libs/dam/components/scene7/dimensionalmedia,FINAL
 /libs/dam/components/scene7/dynamicmediaimage,FINAL
 /libs/dam/components/scene7/dynamicvideo,FINAL
 /libs/dam/components/scene7/flyoutzoom,FINAL
@@ -383,8 +387,10 @@
 /libs/dam/components/youtube,INTERNAL
 /libs/dam/config,PUBLIC
 /libs/dam/content,PUBLIC
+/libs/dam/content/cfm-model,INTERNAL
 /libs/dam/content/collection,INTERNAL
 /libs/dam/content/configurations,FINAL
+/libs/dam/content/download,INTERNAL
 /libs/dam/content/indesign,INTERNAL
 /libs/dam/content/schemaeditors,INTERNAL
 /libs/dam/content/search,INTERNAL
@@ -392,6 +398,7 @@
 /libs/dam/content/stock,INTERNAL
 /libs/dam/gui,PUBLIC
 /libs/dam/gui/components/s7dam,INTERNAL
+/libs/dam/gui/components/s7dam/batchsetpresets/pathfield,FINAL
 /libs/dam/gui/content/adhocassetsharepage,INTERNAL
 /libs/dam/gui/content/assetdetails,PUBLIC
 /libs/dam/gui/content/assetdetails/modals,INTERNAL
@@ -413,6 +420,8 @@
 /libs/dam/gui/content/collections,PUBLIC
 /libs/dam/gui/content/collections/collectiondetails/jcr:content/views/card/datasource/contentfragment,INTERNAL
 /libs/dam/gui/content/collections/collectiondetails/jcr:content/views/list/datasource/contentfragment,INTERNAL
+/libs/dam/gui/content/colortags,INTERNAL
+/libs/dam/gui/content/colortags/configuration,INTERNAL
 /libs/dam/gui/content/commons,PUBLIC
 /libs/dam/gui/content/foldermetadataschemaeditor,PUBLIC
 /libs/dam/gui/content/foldermetadataschemaeditor/schemalist,INTERNAL
@@ -430,6 +439,7 @@
 /libs/dam/gui/content/reports,INTERNAL
 /libs/dam/gui/content/s7dam,INTERNAL
 /libs/dam/gui/content/s7dam/imagepresets/imagepresets/columnpreview,INTERNAL
+/libs/dam/gui/content/smarttags,INTERNAL
 /libs/dam/gui/content/stock/options,PUBLIC
 /libs/dam/gui/content/stock/preview,PUBLIC
 /libs/dam/gui/content/stock/search,FINAL
@@ -460,6 +470,7 @@
 /libs/dam/gui/coral/components/admin/catalogs,INTERNAL
 /libs/dam/gui/coral/components/admin/clientlibs,PUBLIC
 /libs/dam/gui/coral/components/admin/clientlibs/actions,PUBLIC
+/libs/dam/gui/coral/components/admin/clientlibs/actions_compat,INTERNAL
 /libs/dam/gui/coral/components/admin/collections,PUBLIC
 /libs/dam/gui/coral/components/admin/collections/collectionsettings/assetsourcinguserpicker,INTERNAL
 /libs/dam/gui/coral/components/admin/collections/contentrenderer,PUBLIC
@@ -518,6 +529,7 @@
 /libs/dam/gui/coral/components/admin/managepublication,INTERNAL
 /libs/dam/gui/coral/components/admin/managetags,INTERNAL
 /libs/dam/gui/coral/components/admin/metadataeditor,PUBLIC
+/libs/dam/gui/coral/components/admin/metadataeditor/clientlibs/metadataeditor_ext,INTERNAL
 /libs/dam/gui/coral/components/admin/metadataeditor/subassetsreferences,INTERNAL
 /libs/dam/gui/coral/components/admin/metadataeditorcollection,INTERNAL
 /libs/dam/gui/coral/components/admin/moreinfo,INTERNAL
@@ -558,6 +570,7 @@
 /libs/dam/gui/coral/components/admin/schemaforms/pages,INTERNAL
 /libs/dam/gui/coral/components/admin/schemaforms/selectableview,INTERNAL
 /libs/dam/gui/coral/components/admin/schemaforms/title,INTERNAL
+/libs/dam/gui/coral/components/admin/smarttags,INTERNAL
 /libs/dam/gui/coral/components/admin/stock,PUBLIC
 /libs/dam/gui/coral/components/admin/stock/clientlibs,INTERNAL
 /libs/dam/gui/coral/components/admin/templates,INTERNAL
@@ -571,15 +584,22 @@
 /libs/dam/gui/coral/components/admin/wizard,INTERNAL
 /libs/dam/gui/coral/components/commons/datasource,INTERNAL
 /libs/dam/gui/coral/components/commons/renderconditions/deploymenttype,INTERNAL
+/libs/dam/gui/coral/components/commons/ui/shell/titlehead,INTERNAL
+/libs/dam/gui/coral/components/commons/userpicker,INTERNAL
 /libs/dam/gui/coral/components/s7dam,INTERNAL
 /libs/dam/install,INTERNAL
 /libs/dam/metadataeditor,INTERNAL
 /libs/dam/nodetypes,PUBLIC
 /libs/dam/options,PUBLIC
 /libs/dam/preview,FINAL
+/libs/dam/remoteassets,INTERNAL
 /libs/dam/remoteassets/components/clientlibs,INTERNAL
 /libs/dam/remoteassets/components/config/ui/clientlibs,INTERNAL
+/libs/dam/remoteassets/components/references/clientlibs,INTERNAL
+/libs/dam/remoteassets/content,INTERNAL
 /libs/dam/remoteassets/content/configuration,INTERNAL
+/libs/dam/remoteassets/content/siteconnections,INTERNAL
+/libs/dam/remoteassets/content/siteconnections/clientlibs,INTERNAL
 /libs/dam/templates,PUBLIC
 /libs/dam/templates/marketingcloud,INTERNAL
 /libs/dam/templates/mediaportal,INTERNAL
@@ -660,6 +680,7 @@
 /libs/foundation/components/video,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.5: Should not be used in new projects
 /libs/granite/activitystreams,INTERNAL
 /libs/granite/async/components/asyncjobs,INTERNAL
+/libs/granite/async/components/asyncjobs/config/ui/clientlibs,INTERNAL
 /libs/granite/async/content/asyncjobs,INTERNAL
 /libs/granite/backup,FINAL
 /libs/granite/backup/clientlibs,INTERNAL
@@ -816,6 +837,7 @@
 /libs/granite/ui/components/coral/foundation/form/userpicker/readonly,INTERNAL
 /libs/granite/ui/components/coral/foundation/heading,FINAL
 /libs/granite/ui/components/coral/foundation/hyperlink,FINAL
+/libs/granite/ui/components/coral/foundation/hyperlink/skipnavigationlinks,FINAL
 /libs/granite/ui/components/coral/foundation/include,FINAL
 /libs/granite/ui/components/coral/foundation/includeclientlibs,FINAL
 /libs/granite/ui/components/coral/foundation/includewrapper,INTERNAL
@@ -978,6 +1000,7 @@
 /libs/granite/ui/components/shell,FINAL
 /libs/granite/ui/components/shell/clientlibs,INTERNAL
 /libs/granite/ui/components/shell/collectionpage,FINAL
+/libs/granite/ui/components/shell/collectionpage/sort,INTERNAL
 /libs/granite/ui/components/shell/footer,FINAL
 /libs/granite/ui/components/shell/globalnav,INTERNAL
 /libs/granite/ui/components/shell/header,INTERNAL
@@ -1013,6 +1036,7 @@
 /libs/launches/components/clientlibs,INTERNAL
 /libs/launches/components/coral/references/clientlibs/launchreferences,INTERNAL
 /libs/launches/components/coral/references/launchcopy,INTERNAL
+/libs/launches/components/coral/references/launchsource,INTERNAL
 /libs/launches/components/createlaunchwizard/redirect,INTERNAL
 /libs/launches/components/edit/childrow,INTERNAL
 /libs/launches/components/edit/launchesdatasource,FINAL
@@ -1064,11 +1088,11 @@
 /libs/mcm/content,INTERNAL
 /libs/mcm/emailservice-clientlib,INTERNAL
 /libs/mcm/widgets,INTERNAL
-/libs/portal/content,FINAL
 /libs/replication,INTERNAL
 /libs/settings/dam/search/catalogs,INTERNAL
 /libs/settings/dam/search/collections,INTERNAL
 /libs/settings/dam/search/facets/assets,INTERNAL
+/libs/settings/dam/search/facets/cfm-model,INTERNAL
 /libs/settings/dam/search/facets/snippets,INTERNAL
 /libs/settings/dam/search/facets/stock,INTERNAL
 /libs/settings/granite/operations,PUBLIC
@@ -1076,6 +1100,7 @@
 /libs/settings/granite/operations/hc,PUBLIC
 /libs/settings/granite/operations/maintenance,PUBLIC
 /libs/settings/granite/operations/monitoring,PUBLIC
+/libs/settings/workflow/search,INTERNAL
 /libs/sightly/js,FINAL
 /libs/sightly/js/3rd-party,FINAL
 /libs/sightly/js/3rd-party/q.js,FINAL
