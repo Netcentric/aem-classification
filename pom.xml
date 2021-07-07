@@ -55,7 +55,6 @@
         <java.target.version>8</java.target.version> <!-- used for compiler plugin and animal-sniffer, for compatibility reasons with Java 9 only the values 6,7,8 and 9 is allowed -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.6.0</junit.jupiter.version>
-        <arguments /> <!-- additional arguments for the forked Maven run during releases -->
     </properties>
 
     <dependencyManagement>
@@ -259,9 +258,8 @@
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
-                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
                     <goals>deploy</goals>
-                    <arguments>-Prelease ${arguments}</arguments>
                     <tagNameFormat>@{project.version}</tagNameFormat>
                     <!-- skip rebuilding the release with GitHub actions (https://github.blog/changelog/2021-02-08-github-actions-skip-pull-request-and-push-workflows-with-skip-ci/) -->
                     <scmReleaseCommitComment>@{prefix} prepare release @{releaseLabel} [skip ci]</scmReleaseCommitComment>
