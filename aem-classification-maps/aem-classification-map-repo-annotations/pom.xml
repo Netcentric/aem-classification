@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>aem-classification-map-repo-annotations</artifactId>
-    <version>2021.6.5586-SNAPSHOT</version>
+    <version>2021.6.5586</version>
     <name>AEM Classification Map from Repository Annotations</name>
     <description>Classification Maps to be used with the validator</description>
 
@@ -15,6 +15,6 @@
         <connection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</developerConnection>
         <url>https://github.com/Netcentric/aem-classification.git</url>
-        <tag>HEAD</tag>
+        <tag>map-repo-annotations-2021.6.5586</tag>
     </scm>
 </project>
