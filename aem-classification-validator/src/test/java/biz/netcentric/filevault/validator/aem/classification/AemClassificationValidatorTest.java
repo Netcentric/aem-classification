@@ -49,7 +49,7 @@ import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 public class AemClassificationValidatorTest {
-    private ContentClassificationMapper classificationMap;
+    private MutableContentClassificationMap classificationMap;
 
     private AemClassificationValidator validator;
 
@@ -59,7 +59,7 @@ public class AemClassificationValidatorTest {
 
     @BeforeEach
     public void setUp() {
-        classificationMap = new ContentClassificationMapperImpl("1.0.0");
+        classificationMap = new MutableContentClassificationMapImpl("1.0.0");
         classificationMap.put("/libs/abstract", ContentClassification.ABSTRACT, "abstractremark");
         classificationMap.put("/libs/final", ContentClassification.FINAL, "finalremark");
         classificationMap.put("/libs/internal", ContentClassification.INTERNAL, "internalremark");
