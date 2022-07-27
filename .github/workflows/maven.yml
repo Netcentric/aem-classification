@@ -21,18 +21,27 @@ jobs:
       run: |
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
-    - name: Build Reactor with Maven
+    - name: Build and Analyse Reactor with Maven
       if: github.ref != 'refs/heads/master'
-      run: mvn -B clean install --file pom.xml
+      run: mvn -B clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Netcentric_aem-classification -Dsonar.organization=netcentric -Dsonar.host.url=https://sonarcloud.io -Pcoverage-report
+      env:
+        # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        # Needed to get some information about the pull request, if any
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Build Site for Maven Plugin
       if: github.ref != 'refs/heads/master'
       run: mvn -B clean site --file aem-classification-maven-plugin/pom.xml
-    - name: Deploy Reactor with Maven
+    - name:  Build, Analyse and Deploy Reactor with Maven
       if: github.ref == 'refs/heads/master'
-      run: mvn -B clean deploy --file pom.xml
+      run: mvn -B clean deploy org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Netcentric_aem-classification -Dsonar.organization=netcentric -Dsonar.host.url=https://sonarcloud.io -Pcoverage-report
       env: 
         MAVEN_USERNAME: ${{ secrets.OSSRH_TOKEN_USER }}
         MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
+        # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        # Needed to get some information about the pull request, if any
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Build and Deploy Site for Maven Plugin
       if: github.ref == 'refs/heads/master'
       run: mvn -B clean site site:stage scm-publish:publish-scm -Dusername=kwin -Dpassword=${{ secrets.GITHUB_SITE_DEPLOY_TOKEN_KWIN }} --file aem-classification-maven-plugin/pom.xml

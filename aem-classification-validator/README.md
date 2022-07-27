@@ -1,7 +1,11 @@
-![](https://github.com/Netcentric/aem-classification/workflows/Java%20CI/badge.svg) [![License](https://img.shields.io/badge/License-EPL%201.0-red.svg)](https://opensource.org/licenses/EPL-1.0)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/biz.netcentric.filevault.validator/aem-classification-validator/badge.svg)](https://search.maven.org/artifact/biz.netcentric.filevault.validator/aem-classification-validator)
+[![Maven Central](https://img.shields.io/maven-central/v/biz.netcentric.filevault.validator/aem-classification-validator)](https://search.maven.org/artifact/biz.netcentric.filevault.validator/aem-classification-validator)
+[![License](https://img.shields.io/badge/License-EPL%201.0-red.svg)](https://opensource.org/licenses/EPL-1.0)
+[![Build Status](https://github.com/Netcentric/aem-classification/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/Netcentric/aem-classification/actions/workflows/maven.yml)
+[![SonarCloud Status](https://sonarcloud.io/api/project_badges/measure?project=Netcentric_aem-classification&metric=alert_status)](https://sonarcloud.io/dashboard?id=Netcentric_aem-classification)
+[![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=Netcentric_aem-classification&metric=coverage)](https://sonarcloud.io/component_measures/metric/coverage/list?id=Netcentric_aem-classification)
 
 # Overview
+
 Validates scripts/components for invalid usage according to [AEMs Content Classification][1]. It is a validator implementation for the [FileVault Validation Module][2] and can be used for example with the [filevault-package-maven-plugin][3].
 
 # Settings
@@ -43,6 +47,7 @@ The explanation for those can be found in the [Adobe documentation][1].
 The CSV format is based on [RFC 4180][7]. In addition a comment starting with `#` on the first line is supposed to contain a label for the map (like the underlying AEM version). `path` is supposed to be an absolute path of a specific resource.
 
 # Usage with Maven
+
 You can use this validator with the [FileVault Package Maven Plugin][3] in version 1.1.0 or higher like this
 
 ```
@@ -82,6 +87,7 @@ You can use this validator with the [FileVault Package Maven Plugin][3] in versi
 ```
 
 # Why?
+
 Why is the validation and enforcement during build time crucial as Adobe already provides some run-time [Health Check][1] as well as the (run time) [Pattern Detector][6]? 
 
 There are several reasons:
