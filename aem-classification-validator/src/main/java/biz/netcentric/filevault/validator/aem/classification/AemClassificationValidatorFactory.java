@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +40,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import biz.netcentric.filevault.validator.aem.classification.classpathurl.URLFactory;
+import biz.netcentric.filevault.validator.aem.classification.map.CompositeContentClassificationMap;
+import biz.netcentric.filevault.validator.aem.classification.map.ContentClassificationMapImpl;
 
 @MetaInfServices
 public class AemClassificationValidatorFactory implements ValidatorFactory {
@@ -79,22 +82,17 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
             throw new IllegalArgumentException("At least one value given in option " + OPTION_WHITELISTED_RESOURCE_PATH_PATTERNS + " is invalid", e);
         }
         try {
-            ContentClassificationMapper map = null;
+            Collection<ContentClassificationMap> maps = new LinkedList<>();
             for (String mapUrl : mapUrls.split("\\s*,\\s*")) {
                 try (InputStream input = URLFactory.createURL(mapUrl).openStream()) {
-                    if (map == null) {
-                        map = new ContentClassificationMapperImpl(input, mapUrl);
-                    } else {
-                        LOGGER.debug("Merge another map {}", mapUrl);
-                        // merge another map
-                        map.merge(new ContentClassificationMapperImpl(input, mapUrl));
-                    }
+                    LOGGER.debug("Load map {}", mapUrl);
+                    maps.add(new ContentClassificationMapImpl(input, mapUrl));
                 }
             }
-            if (map == null) {
+            if (maps.isEmpty()) {
                 throw new IllegalArgumentException("At least one valid map must be given!");
             }
-            return new AemClassificationValidator(settings.getDefaultSeverity(), map, whitelistedResourcePaths,
+            return new AemClassificationValidator(settings.getDefaultSeverity(), new CompositeContentClassificationMap(maps), whitelistedResourcePaths,
                     getSeverityPerClassification(settings.getOptions().get(OPTION_SEVERITIES_PER_CLASSIFICATION)));
         } catch (IOException e) {
             throw new IllegalStateException("Could not read from  " + mapUrls, e);

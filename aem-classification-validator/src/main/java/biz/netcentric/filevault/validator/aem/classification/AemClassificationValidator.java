@@ -85,7 +85,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     /** Pattern to be used with {@link String#format(String, Object...)} */
     static final String VIOLATION_MESSAGE_STRING = "%s %s resource '%s' which is marked as '%s'. It therefore violates the content classification!";
 
-    private final ContentClassificationMapper classificationMap;
+    private final ContentClassificationMap classificationMap;
     private final Collection<String> whitelistedResourcePaths;
     private final Collection<Pattern> whitelistedResourcePathPatterns;
     private final Map<ContentClassification, ValidationMessageSeverity> severityPerClassification;
@@ -94,7 +94,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     private final Collection<String> overlaidNodePaths;
 
     // TODO: warn of usage in ancestor nodes with a different severity?
-    public AemClassificationValidator(@NotNull ValidationMessageSeverity defaultSeverity, @NotNull ContentClassificationMapper classificationMap, @NotNull Collection<String> whitelistedResourcePaths, @NotNull Map<ContentClassification, ValidationMessageSeverity> severityPerClassification) {
+    public AemClassificationValidator(@NotNull ValidationMessageSeverity defaultSeverity, @NotNull ContentClassificationMap classificationMap, @NotNull Collection<String> whitelistedResourcePaths, @NotNull Map<ContentClassification, ValidationMessageSeverity> severityPerClassification) {
         super();
         this.defaultSeverity = defaultSeverity;
         this.classificationMap = classificationMap;

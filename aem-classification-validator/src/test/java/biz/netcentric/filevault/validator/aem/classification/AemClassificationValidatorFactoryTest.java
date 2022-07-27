@@ -26,6 +26,10 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import biz.netcentric.filevault.validator.aem.classification.map.CompositeContentClassificationMap;
+import biz.netcentric.filevault.validator.aem.classification.map.ContentClassificationMapImpl;
+import biz.netcentric.filevault.validator.aem.classification.map.MutableContentClassificationMapImpl;
+
 public class AemClassificationValidatorFactoryTest {
 
     @Test
@@ -86,16 +90,16 @@ public class AemClassificationValidatorFactoryTest {
         options.put("whitelistedResourcePathsPatterns", "/resourceType1/.*,/resourceType2");
         options.put("severitiesPerClassification", "INTERNAL=DEBUG");
         ValidatorSettings settings = new ValidatorSettingsImpl(false, ValidationMessageSeverity.WARN, options);
-        ContentClassificationMapper map = new ContentClassificationMapperImpl("Simple");
+        MutableContentClassificationMap map = new MutableContentClassificationMapImpl("Simple");
         map.put("/test", ContentClassification.INTERNAL_DEPRECATED, "Deprecated");
         Collection<String> whiteListedResourceTypes = new LinkedList<>();
         whiteListedResourceTypes.add("/resourceType1/.*");
         whiteListedResourceTypes.add("/resourceType2");
         Map<ContentClassification, ValidationMessageSeverity> severitiesPerClassification = new HashMap<>();
         severitiesPerClassification.put(ContentClassification.INTERNAL, ValidationMessageSeverity.DEBUG);
-        AemClassificationValidator expectedValidator = new AemClassificationValidator(ValidationMessageSeverity.WARN, map, whiteListedResourceTypes, severitiesPerClassification);
+        AemClassificationValidator expectedValidator = new AemClassificationValidator(ValidationMessageSeverity.WARN, new CompositeContentClassificationMap(map), whiteListedResourceTypes, severitiesPerClassification);
         Assertions.assertEquals(expectedValidator, factory.createValidator(null, settings));
-        
+
         options = new HashMap<>();
         options.put("maps", "tccl:valid-classification.map");
         // new option for whitelisting
@@ -110,6 +114,8 @@ public class AemClassificationValidatorFactoryTest {
         options.put("whitelistedResourcePathPatterns", "/resourceType1/.*,/resourceType2");
         options.put("severitiesPerClassification", "INTERNAL=DEBUG");
         settings = new ValidatorSettingsImpl(false, ValidationMessageSeverity.WARN, options);
+        ContentClassificationMap emptyMap = new ContentClassificationMapImpl("");
+        expectedValidator = new AemClassificationValidator(ValidationMessageSeverity.WARN, new CompositeContentClassificationMap(map, emptyMap, emptyMap), whiteListedResourceTypes, severitiesPerClassification);
         Assertions.assertEquals(expectedValidator, factory.createValidator(null, settings));
     }
     
