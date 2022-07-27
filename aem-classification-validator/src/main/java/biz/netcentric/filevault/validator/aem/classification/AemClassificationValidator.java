@@ -66,18 +66,15 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
      * The first subgroup must contain the value of the resource type.
      * This pattern only works if the resource type is given as literal!
      * 
-     * @see <a href="https://helpx.adobe.com/experience-manager/6-3/sites/developing/using/taglib.html">CQ/Sling Tag Library</a>
-     * 
-     * FIXME: the pattern is too restrictive currently
+     * @see <a href="https://experienceleague.adobe.com/docs/experience-manager-65/developing/platform/taglib.html?lang=en">CQ/Sling Tag Library</a>
      */
-    private static final Pattern JSP_INCLUDE_OVERWRITING_RESOURCE_TYPE = Pattern.compile("(?:<cq:|<sling:)include resourceType=\"(^\")");
+    private static final Pattern JSP_INCLUDE_OVERWRITING_RESOURCE_TYPE = Pattern.compile("(?:<cq:|<sling:)include resourceType\\s*=\\s*(?:\"|\')([^'\"]*)(?:\"|\')");
 
     private static final PathMatcher HTL_PATH_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**.html");
     private static final PathMatcher JSP_PATH_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**.jsp");
-    
+
     private static final String SLING_RESOURCE_TYPE_PROPERTY_NAME = NameFactoryImpl.getInstance().create(JcrResourceConstants.SLING_NAMESPACE_URI,SlingConstants.PROPERTY_RESOURCE_TYPE).toString();
     private static final String SLING_RESOURCE_SUPER_TYPE_PROPERTY_NAME = NameFactoryImpl.getInstance().create(JcrResourceConstants.SLING_NAMESPACE_URI,SlingConstants.PROPERTY_RESOURCE_SUPER_TYPE).toString();
-    
 
     public static final String MESSAGE_SUBJECT_NODE = "Element with name \"%s\"";
     public static final String MESSAGE_SUBJECT_FILE = "This file";
@@ -93,7 +90,6 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     private @NotNull ValidationMessageSeverity defaultSeverity;
     private final Collection<String> overlaidNodePaths;
 
-    // TODO: warn of usage in ancestor nodes with a different severity?
     public AemClassificationValidator(@NotNull ValidationMessageSeverity defaultSeverity, @NotNull ContentClassificationMap classificationMap, @NotNull Collection<String> whitelistedResourcePaths, @NotNull Map<ContentClassification, ValidationMessageSeverity> severityPerClassification) {
         super();
         this.defaultSeverity = defaultSeverity;
@@ -135,9 +131,6 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
         } else {
             throw new IllegalStateException("The given file is neither JSP nor HTL (" + filePath + ")");
         }
-        // input stream 
-        // get mime type?
-        // always assume UTF-8 here
         Collection<ValidationMessage> messages = new LinkedList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
             String line;
@@ -162,20 +155,20 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
 
         // attributes resourceType ...
         String usedResource = node.getValue(SLING_RESOURCE_TYPE_PROPERTY_NAME);
-        ValidationMessage message = validateClassification(usedResource,  ContentUsage.REFERENCE, subject);
+        ValidationMessage message = validateClassification(usedResource, ContentUsage.REFERENCE, subject);
         if (message != null) {
            messages.add(message);
         }
 
         // ... and resourceSuperType are considered
         String superResource = node.getValue(SLING_RESOURCE_SUPER_TYPE_PROPERTY_NAME);
-        message = validateClassification(superResource,  ContentUsage.INHERIT, subject);
+        message = validateClassification(superResource, ContentUsage.INHERIT, subject);
         if (message != null) {
            messages.add(message);
         }
 
         // check overlays in addition
-        message = validateClassification(nodePath,  ContentUsage.OVERLAY, subject);
+        message = validateClassification(nodePath, ContentUsage.OVERLAY, subject);
         if (message != null) {
            messages.add(message);
            overlaidNodePaths.add(nodePath);

@@ -53,6 +53,8 @@
     <properties>
         <maven.version>3.3.9</maven.version>
         <java.target.version>8</java.target.version> <!-- used for compiler plugin and animal-sniffer, for compatibility reasons with Java 9 only the values 6,7,8 and 9 is allowed -->
+        <maven.compiler.target>1.${java.target.version}</maven.compiler.target>
+        <maven.compiler.source>${maven.compiler.target}</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.9.0</junit.jupiter.version>
     </properties>
@@ -210,14 +212,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.${java.target.version}</source>
-                    <target>1.${java.target.version}</target>
-                </configuration>
             </plugin>
             <!-- check with animal sniffer (http://www.mojohaus.org/animal-sniffer/), should only be used in JDKs prior version 9 -->
             <plugin>

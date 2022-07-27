@@ -1,3 +1,4 @@
+
 package biz.netcentric.filevault.validator.aem.classification;
 
 /*-
@@ -56,6 +57,7 @@ public class AemClassificationValidatorTest {
     private AemClassificationValidator validator;
 
     private static final Path SIMPLEFILE_HTL_PATH = Paths.get("/apps/example-htl.html");
+    private static final Path SIMPLEFILE_JSP_PATH = Paths.get("/apps/example.jsp");
     private static final Path OVERLAY_DOCVIEW_PATH = Paths.get("/apps/.content.xml");
     private static final Path EXAMPLE_DOCVIEW_PATH = Paths.get("/apps/example/.content.xml");
 
@@ -104,7 +106,7 @@ public class AemClassificationValidatorTest {
         assertTrue(matcher.find());
         assertEquals("resourceType", matcher.group(1));
     }
- 
+
     @Test
     public void testReferencingViolationsInDocviewXml()
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, FileSystemException {
@@ -160,7 +162,6 @@ public class AemClassificationValidatorTest {
            );
     }
 
-    
     @Test
     public void testOverlayingViolationsInSimpleFiles()
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, FileSystemException {
@@ -173,7 +174,10 @@ public class AemClassificationValidatorTest {
         assertEquals(Collections.singleton(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.OVERLAY, "/libs/internal/test21",ContentClassification.INTERNAL,  "internalremark")), validator.validate("/apps/internal/test21"));
         assertNull(validator.validate("/apps/public"));
         assertNull(validator.validate("/apps/public/test41"));
+    }
 
+    @Test
+    public void testReferencingViolationsInHtlAndJsp() throws IOException {
         // check content of JSPs and HTLs
         assertTrue(validator.shouldValidateJcrData(Paths.get("/apps/mytest/component/componentA/componentA.html")));
         assertTrue(validator.shouldValidateJcrData(Paths.get("/apps/mytest/component/componentA/componentA.jsp")));
@@ -185,8 +189,14 @@ public class AemClassificationValidatorTest {
             // and check violations
             assertEquals(Collections.singletonList(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.REFERENCE, "/libs/abstract/test",  ContentClassification.ABSTRACT, "abstractremark")), messages);
         }
+        
+        // check JSP which references protected resource type
+        try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("example.jsp")) {
+            Collection<ValidationMessage> messages = validator.validateJcrData(input, SIMPLEFILE_JSP_PATH, new HashMap<String, Integer>());
+            // and check violations
+            assertEquals(Collections.singletonList(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.REFERENCE, "/libs/abstract/test",  ContentClassification.ABSTRACT, "abstractremark")), messages);
+        }
     }
-
     static final class ClassificationViolation {
         private final String nodePath;
         private final String name;
@@ -240,7 +250,6 @@ public class AemClassificationValidatorTest {
         return new ValidationMessage(severity, message);
     }
 
-    
     static @NotNull ValidationMessage  getSimpleFileViolationMessage(ValidationMessageSeverity severity, ContentUsage usage, String resourceType, ContentClassification classification, String remark) {
         return new ValidationMessage(severity, AemClassificationValidator.extendMessageWithRemark(String.format(SIMPLEFILE_VIOLATION_MESSAGE_STRING, usage.getLabel(), resourceType, classification.getLabel()), remark));
     }

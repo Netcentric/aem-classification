@@ -15,6 +15,7 @@ package biz.netcentric.filevault.validator.aem.classification.map;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -53,11 +54,13 @@ public class CompositeContentClassificationMap implements ContentClassificationM
     @Override
     public @NotNull Entry<ContentClassification, String> getContentClassificationAndRemarkForResourcePath(
             @NotNull String resourcePath, @Nullable Collection<Pattern> whitelistedResourcePaths) {
-        Entry<ContentClassification, String> resultingEntry = null;
-        String mapLabel = null;
-        for (ContentClassificationMap map : maps) {
-            Entry<ContentClassification, String> entry = map.getContentClassificationAndRemarkForResourcePath(resourcePath, whitelistedResourcePaths);
-            if (resultingEntry == null || entry.getKey().ordinal() <  resultingEntry.getKey().ordinal()) {
+        Iterator<ContentClassificationMap> mapIterator = maps.iterator();
+        ContentClassificationMap map = mapIterator.next();
+        @NotNull Entry<ContentClassification, String> resultingEntry = map.getContentClassificationAndRemarkForResourcePath(resourcePath, whitelistedResourcePaths);
+        String mapLabel = map.getLabel();
+        while (mapIterator.hasNext()) {
+            Entry<ContentClassification, String> entry = mapIterator.next().getContentClassificationAndRemarkForResourcePath(resourcePath, whitelistedResourcePaths);
+            if (entry.getKey().ordinal() <  resultingEntry.getKey().ordinal()) {
                 resultingEntry = entry;
                 mapLabel = map.getLabel();
             }

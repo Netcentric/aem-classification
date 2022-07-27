@@ -210,6 +210,7 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
         }
     }
 
+    @SuppressWarnings("java:S2647") // basic auth is ok in this context
     private InputStream getHttpConnectionInputStream(String path) throws IOException {
         URL url = new URL(baseUrl, path);
         getLog().debug("Connecting to " + url + "...");
