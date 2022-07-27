@@ -1,4 +1,4 @@
-package biz.netcentric.filevault.validator.aem.classification;
+package biz.netcentric.filevault.validator.aem.classification.map;
 
 /*-
  * #%L
@@ -23,9 +23,20 @@ import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import biz.netcentric.filevault.validator.aem.classification.ContentClassification;
+import biz.netcentric.filevault.validator.aem.classification.ContentClassificationMap;
+
+/** 
+ * Composite classification map backed by multiple {@link ContentClassificationMap} s
+ * It returns the strictest content classification returned by any of the underlying maps (irrespective of
+ * prefix length matching the given resource path) for {@link #getContentClassificationAndRemarkForResourcePath(String, Collection)}.
+ */
 public class CompositeContentClassificationMap implements ContentClassificationMap {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CompositeContentClassificationMap.class);
     private final Collection<ContentClassificationMap> maps;
 
     public CompositeContentClassificationMap(@NotNull ContentClassificationMap... maps) {
@@ -43,12 +54,15 @@ public class CompositeContentClassificationMap implements ContentClassificationM
     public @NotNull Entry<ContentClassification, String> getContentClassificationAndRemarkForResourcePath(
             @NotNull String resourcePath, @Nullable Collection<Pattern> whitelistedResourcePaths) {
         Entry<ContentClassification, String> resultingEntry = null;
+        String mapLabel = null;
         for (ContentClassificationMap map : maps) {
             Entry<ContentClassification, String> entry = map.getContentClassificationAndRemarkForResourcePath(resourcePath, whitelistedResourcePaths);
             if (resultingEntry == null || entry.getKey().ordinal() <  resultingEntry.getKey().ordinal()) {
                 resultingEntry = entry;
+                mapLabel = map.getLabel();
             }
         }
+        LOGGER.debug("Found strictest classification {} in map with label {}", resultingEntry.getKey(), mapLabel);
         return resultingEntry;
     }
 

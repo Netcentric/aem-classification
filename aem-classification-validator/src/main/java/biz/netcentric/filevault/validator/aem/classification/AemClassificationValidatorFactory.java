@@ -40,6 +40,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import biz.netcentric.filevault.validator.aem.classification.classpathurl.URLFactory;
+import biz.netcentric.filevault.validator.aem.classification.map.CompositeContentClassificationMap;
+import biz.netcentric.filevault.validator.aem.classification.map.ContentClassificationMapImpl;
 
 @MetaInfServices
 public class AemClassificationValidatorFactory implements ValidatorFactory {

@@ -1,4 +1,4 @@
-package biz.netcentric.filevault.validator.aem.classification;
+package biz.netcentric.filevault.validator.aem.classification.map;
 
 /*-
  * #%L
@@ -35,6 +35,9 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import biz.netcentric.filevault.validator.aem.classification.ContentClassification;
+import biz.netcentric.filevault.validator.aem.classification.ContentClassificationMap;
+
 /** 
  * A map containing content classifications for repository node paths.
  * 
@@ -59,7 +62,7 @@ public class ContentClassificationMapImpl implements ContentClassificationMap {
     private static final CSVFormat CSV_FORMAT = CSVFormat.RFC4180.withCommentMarker('#');
     private static final Logger LOGGER = LoggerFactory.getLogger(ContentClassificationMapImpl.class);
 
-    ContentClassificationMapImpl(String label) {
+    public ContentClassificationMapImpl(String label) {
         this.classificationMap = new TreeMap<>(); // this is sorted by key
         this.remarkMap = new HashMap<>();
         this.label = label;

@@ -1,4 +1,4 @@
-package biz.netcentric.filevault.validator.aem.classification;
+package biz.netcentric.filevault.validator.aem.classification.map;
 
 /*-
  * #%L
@@ -27,17 +27,16 @@ import org.apache.commons.io.output.CloseShieldOutputStream;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import biz.netcentric.filevault.validator.aem.classification.ContentClassification;
+import biz.netcentric.filevault.validator.aem.classification.MutableContentClassificationMap;
 
 /** 
  * A mutable {@link ContentClassificationMapImpl} which supports serialization.
  */
 public class MutableContentClassificationMapImpl extends ContentClassificationMapImpl implements MutableContentClassificationMap {
 
-
     private static final CSVFormat CSV_FORMAT = CSVFormat.RFC4180.withCommentMarker('#');
-    static final Logger LOGGER = LoggerFactory.getLogger(MutableContentClassificationMapImpl.class);
 
     public MutableContentClassificationMapImpl(@NotNull String label) {
         super(label);

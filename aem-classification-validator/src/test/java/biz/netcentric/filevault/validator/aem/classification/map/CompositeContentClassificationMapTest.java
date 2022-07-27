@@ -1,4 +1,4 @@
-package biz.netcentric.filevault.validator.aem.classification;
+package biz.netcentric.filevault.validator.aem.classification.map;
 
 /*-
  * #%L
@@ -18,6 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.AbstractMap.SimpleEntry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import biz.netcentric.filevault.validator.aem.classification.ContentClassification;
+import biz.netcentric.filevault.validator.aem.classification.map.CompositeContentClassificationMap;
+import biz.netcentric.filevault.validator.aem.classification.map.ContentClassificationMapImpl;
 
 public class CompositeContentClassificationMapTest {
 

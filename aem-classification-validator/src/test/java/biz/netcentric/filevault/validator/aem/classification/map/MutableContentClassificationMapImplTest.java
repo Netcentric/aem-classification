@@ -1,4 +1,4 @@
-package biz.netcentric.filevault.validator.aem.classification;
+package biz.netcentric.filevault.validator.aem.classification.map;
 
 /*-
  * #%L
@@ -20,6 +20,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
+
+import biz.netcentric.filevault.validator.aem.classification.ContentClassification;
+import biz.netcentric.filevault.validator.aem.classification.ContentClassificationMap;
+import biz.netcentric.filevault.validator.aem.classification.MutableContentClassificationMap;
+import biz.netcentric.filevault.validator.aem.classification.map.ContentClassificationMapImpl;
+import biz.netcentric.filevault.validator.aem.classification.map.MutableContentClassificationMapImpl;
 
 public class MutableContentClassificationMapImplTest {
 

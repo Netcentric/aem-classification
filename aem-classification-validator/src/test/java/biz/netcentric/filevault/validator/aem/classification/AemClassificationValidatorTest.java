@@ -48,6 +48,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
+import biz.netcentric.filevault.validator.aem.classification.map.MutableContentClassificationMapImpl;
+
 public class AemClassificationValidatorTest {
     private MutableContentClassificationMap classificationMap;
 

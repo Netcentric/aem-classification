@@ -26,7 +26,8 @@ import org.jetbrains.annotations.Nullable;
 public interface ContentClassificationMap {
 
     /**
-     * Returns the classification for the given resource type.
+     * Returns the closest classification for the given resource type.
+     * The closest one is the one with the longest prefix (ending with "/") matching the given resource from the underlying map.
      * In case the given {@code resourcePath} matches any of the {@code whitelistedResourcePaths} it returns PUBLIC.
      * @param resourcePath the absolute resource path
      * @param whitelistedResourcePaths the whitelisted resource paths as regular expression patterns. 

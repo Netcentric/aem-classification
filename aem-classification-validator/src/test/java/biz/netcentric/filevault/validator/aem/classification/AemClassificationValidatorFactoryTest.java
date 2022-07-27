@@ -26,6 +26,10 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import biz.netcentric.filevault.validator.aem.classification.map.CompositeContentClassificationMap;
+import biz.netcentric.filevault.validator.aem.classification.map.ContentClassificationMapImpl;
+import biz.netcentric.filevault.validator.aem.classification.map.MutableContentClassificationMapImpl;
+
 public class AemClassificationValidatorFactoryTest {
 
     @Test
