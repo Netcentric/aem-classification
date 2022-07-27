@@ -30,8 +30,8 @@ import biz.netcentric.filevault.validator.aem.classification.ContentClassificati
 import biz.netcentric.filevault.validator.aem.classification.ContentClassificationMap;
 
 /** 
- * Composite classification map backed by multiple {@link ContentClassificationMap} s
- * It returns the strictest content classification returned by any of the underlying maps (irrespective of
+ * Composite classification map backed by multiple {@link ContentClassificationMap}s.
+ * It returns the strictest {@link ContentClassification} returned by any of the underlying maps (irrespective of
  * prefix length matching the given resource path) for {@link #getContentClassificationAndRemarkForResourcePath(String, Collection)}.
  */
 public class CompositeContentClassificationMap implements ContentClassificationMap {

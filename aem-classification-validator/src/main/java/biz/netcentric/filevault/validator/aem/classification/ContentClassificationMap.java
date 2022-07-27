@@ -21,7 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A classification map consists out of classifications per resource type (i.e. repository paths)
+ * A content classification map consists out of classifications per resource type (i.e. repository paths)
+ * accompanied by an optional remark.
  */
 public interface ContentClassificationMap {
 

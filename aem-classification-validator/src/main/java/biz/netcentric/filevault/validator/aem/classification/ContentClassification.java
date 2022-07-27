@@ -21,8 +21,9 @@ import java.util.List;
 /**
  * 
  *  This always refers to a classification of a {@code sling:resourceType}.
+ *  They are ordered from strictest to most lenient classification.
  *  
- *  @see <a href="https://helpx.adobe.com/experience-manager/6-4/sites/deploying/using/sustainable-upgrades.html">Content
+ *  @see <a href="https://experienceleague.adobe.com/docs/experience-manager-65/deploying/upgrading/sustainable-upgrades.html?lang=en">Content
  *      Classification</a> 
  */
 public enum ContentClassification {
