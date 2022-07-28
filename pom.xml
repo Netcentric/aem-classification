@@ -253,7 +253,7 @@
                 <configuration>
                     <releaseProfiles>release</releaseProfiles>
                     <goals>deploy</goals>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
+                    <tagNameFormat>@{project.version} - @{project.version}</tagNameFormat>
                     <!-- skip rebuilding the release with GitHub actions (https://github.blog/changelog/2021-02-08-github-actions-skip-pull-request-and-push-workflows-with-skip-ci/) -->
                     <scmReleaseCommitComment>@{prefix} prepare release @{releaseLabel} [skip ci]</scmReleaseCommitComment>
                 </configuration>
