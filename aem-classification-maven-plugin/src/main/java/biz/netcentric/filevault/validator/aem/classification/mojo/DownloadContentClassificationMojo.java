@@ -44,9 +44,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import biz.netcentric.filevault.validator.aem.classification.ContentClassification;
-import biz.netcentric.filevault.validator.aem.classification.ContentClassificationMapper;
-import biz.netcentric.filevault.validator.aem.classification.ContentClassificationMapperImpl;
 import biz.netcentric.filevault.validator.aem.classification.ContentUsage;
+import biz.netcentric.filevault.validator.aem.classification.MutableContentClassificationMap;
+import biz.netcentric.filevault.validator.aem.classification.map.MutableContentClassificationMapImpl;
 
 /**
  *  Downloads the classification data from a remote JCR repository (only works with AEM 6.4 or newer),
@@ -94,7 +94,7 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
             log.warn("Make sure that the relevant search index definitions are deployed on AEM at " + baseUrl + ". Otherwise this goal will fail!");
             log.info("Start retrieving the classification and deprecation data from " + baseUrl);
             
-            ContentClassificationMapper map = new ContentClassificationMapperImpl("AEM " + aemVersion);
+            MutableContentClassificationMap map = new MutableContentClassificationMapImpl("AEM " + aemVersion);
             // always make sure that the root node is PUBLIC (even though this might not be part of the classification map extracted from a repo)
             map.put("/", ContentClassification.PUBLIC, null);
             // 1. retrieve classifications from mixins and store in map
@@ -142,7 +142,7 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    void retrieveClassificationForMixin(ContentClassification classification, ContentClassificationMapper map) throws IOException {
+    void retrieveClassificationForMixin(ContentClassification classification, MutableContentClassificationMap map) throws IOException {
         // Uses the crxde search to find the current classification
         // (http://localhost:8080/crx/de/query.jsp?_dc=1536334082630&_charset_=utf-8&type=JCR_SQL2&stmt=SELECT%20*%20FROM%20%5Bgranite%3AInternalArea%5D%0A&showResults=true)
         // the index is crucial for that though (property index limited to properties jcr:primaryType and jcr:mixinTypes)
@@ -181,7 +181,7 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
     }
 
     @SuppressWarnings("unchecked")
-    void retrieveDeprecatedResourceTypes(ContentClassificationMapper map) throws IOException {
+    void retrieveDeprecatedResourceTypes(MutableContentClassificationMap map) throws IOException {
         // uses query builder api to retrieve all deprecation metadata
         String query = "1_property=cq:deprecated&1_property.operation=exists&p.limit=-1&p.hits=selective&p.properties=" + URLEncoder.encode("jcr:mixinTypes jcr:path cq:deprecated cq:deprecatedReason", "ASCII");
         EnumSet<ContentUsage> allContentUsages = EnumSet.allOf(ContentUsage.class);
