@@ -196,6 +196,14 @@ class AemClassificationValidatorTest {
             assertEquals(Collections.singletonList(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.REFERENCE, "/libs/abstract/test",  ContentClassification.ABSTRACT, "abstractremark")), messages);
         }
     }
+
+    @Test
+    void testJcrExpandedFormNameToReadableFormat() {
+        assertEquals("test", AemClassificationValidator.jcrExpandedFormNameToReadableFormat("test"));
+        assertEquals("test", AemClassificationValidator.jcrExpandedFormNameToReadableFormat("{} test"));
+        assertEquals("test (Namespace URI: http://www.jcp.org/jcr/nt/1.0)", AemClassificationValidator.jcrExpandedFormNameToReadableFormat("{http://www.jcp.org/jcr/nt/1.0} test"));
+    }
+
     static final class ClassificationViolation {
         private final String nodePath;
         private final String name;

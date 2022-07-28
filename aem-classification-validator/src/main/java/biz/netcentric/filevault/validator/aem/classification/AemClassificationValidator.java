@@ -79,6 +79,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     public static final String MESSAGE_SUBJECT_NODE = "Element with name \"%s\"";
     public static final String MESSAGE_SUBJECT_FILE = "This file";
 
+    public static final Pattern JCR_EXPANDED_FORM_PATTERN = Pattern.compile("\\{([^\\}]*)\\} (.*)$");
     /** Pattern to be used with {@link String#format(String, Object...)} */
     static final String VIOLATION_MESSAGE_STRING = "%s %s resource '%s' which is marked as '%s'. It therefore violates the content classification!";
 
@@ -148,10 +149,27 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
         return messages;
     }
 
+    /**
+     * JCR expanded form is not very user friendly therefore try to format as more readable string
+     * @return the given argument in a more readable format
+     */
+    static String jcrExpandedFormNameToReadableFormat(String jcrExpandedFormName) {
+        Matcher matcher = JCR_EXPANDED_FORM_PATTERN.matcher(jcrExpandedFormName);
+        if (matcher.matches()) {
+            if (matcher.group(1).isEmpty()) {
+                return matcher.group(2);
+            } else {
+                return matcher.group(2) + " (Namespace URI: " + matcher.group(1) + ")";
+            }
+        } else {
+            return jcrExpandedFormName;
+        }
+    }
+
     @Override
     public Collection<ValidationMessage> validate(@NotNull DocViewNode node, @NotNull String nodePath, @NotNull Path filePath, boolean isRoot) {
         Collection<ValidationMessage> messages = new LinkedList<>();
-        String subject = String.format(MESSAGE_SUBJECT_NODE, node.label);
+        String subject = String.format(MESSAGE_SUBJECT_NODE, jcrExpandedFormNameToReadableFormat(node.label));
 
         // attributes resourceType ...
         String usedResource = node.getValue(SLING_RESOURCE_TYPE_PROPERTY_NAME);
