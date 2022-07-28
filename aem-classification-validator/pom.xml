@@ -2,20 +2,20 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>aem-classification-validator</artifactId>
     <name>AEM Classification Validator</name>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.0</version>
     <description>FileVault validator which verifies that a package complies with the AEM content classifications (https://experienceleague.adobe.com/docs/experience-manager-65/deploying/upgrading/sustainable-upgrades.html?lang=en).</description>
 
     <parent>
         <groupId>biz.netcentric.filevault.validator</groupId>
         <artifactId>aem-classification</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1</version>
     </parent>
 
     <scm>
         <connection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</developerConnection>
         <url>https://github.com/Netcentric/aem-classification.git</url>
-      <tag>HEAD</tag>
+      <tag>1.0.1</tag>
   </scm>
 
     <dependencies>
