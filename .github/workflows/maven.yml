@@ -44,4 +44,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Build and Deploy Site for Maven Plugin
       if: github.ref == 'refs/heads/master'
-      run: mvn -B clean site site:stage scm-publish:publish-scm -Dusername=kwin -Dpassword=${{ secrets.GITHUB_SITE_DEPLOY_TOKEN_KWIN }} --file aem-classification-maven-plugin/pom.xml
+      run: mvn -B clean site site:stage scm-publish:publish-scm -Dusername=kwin -Dpassword=${{ secrets.GH_PAGES_BRANCH_TOKEN_KWIN }} --file aem-classification-maven-plugin/pom.xml
