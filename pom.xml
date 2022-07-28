@@ -374,9 +374,10 @@
         </profile>
     </profiles>
     <modules>
-        <module>aem-classification-validator</module>
+    <!-- these modules don't need to be built with the reactor as released separately and no code contained (only config files)
         <module>aem-classification-search-index-package</module>
+        <module>aem-classification-maps</module>  -->
+        <module>aem-classification-validator</module>
         <module>aem-classification-maven-plugin</module>
-        <module>aem-classification-maps</module>
     </modules>
 </project>
