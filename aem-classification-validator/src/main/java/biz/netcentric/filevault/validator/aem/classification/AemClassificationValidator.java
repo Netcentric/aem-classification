@@ -79,7 +79,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     public static final String MESSAGE_SUBJECT_NODE = "Element with name \"%s\"";
     public static final String MESSAGE_SUBJECT_FILE = "This file";
 
-    public static final Pattern JCR_EXPANDED_FORM_PATTERN = Pattern.compile("\\{([^\\}]*)\\} (.*)$");
+    public static final Pattern JCR_EXPANDED_FORM_PATTERN = Pattern.compile("\\{([^\\}]*)\\}(.*)$");
     /** Pattern to be used with {@link String#format(String, Object...)} */
     static final String VIOLATION_MESSAGE_STRING = "%s %s resource '%s' which is marked as '%s'. It therefore violates the content classification!";
 

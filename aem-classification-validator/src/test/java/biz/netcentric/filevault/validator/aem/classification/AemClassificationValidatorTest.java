@@ -200,8 +200,8 @@ class AemClassificationValidatorTest {
     @Test
     void testJcrExpandedFormNameToReadableFormat() {
         assertEquals("test", AemClassificationValidator.jcrExpandedFormNameToReadableFormat("test"));
-        assertEquals("test", AemClassificationValidator.jcrExpandedFormNameToReadableFormat("{} test"));
-        assertEquals("test (Namespace URI: http://www.jcp.org/jcr/nt/1.0)", AemClassificationValidator.jcrExpandedFormNameToReadableFormat("{http://www.jcp.org/jcr/nt/1.0} test"));
+        assertEquals("test", AemClassificationValidator.jcrExpandedFormNameToReadableFormat("{}test"));
+        assertEquals("test (Namespace URI: http://www.jcp.org/jcr/nt/1.0)", AemClassificationValidator.jcrExpandedFormNameToReadableFormat("{http://www.jcp.org/jcr/nt/1.0}test"));
     }
 
     static final class ClassificationViolation {
