@@ -2,8 +2,8 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>aem-classification-validator</artifactId>
     <name>AEM Classification Validator</name>
-    <version>1.0.2-SNAPSHOT</version>
-    <description>FileVault validator which verifies that a package complies with the AEM content classifications (https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/sustainable-upgrades.html).</description>
+    <version>1.1.0-SNAPSHOT</version>
+    <description>FileVault validator which verifies that a package complies with the AEM content classifications (https://experienceleague.adobe.com/docs/experience-manager-65/deploying/upgrading/sustainable-upgrades.html?lang=en).</description>
 
     <parent>
         <groupId>biz.netcentric.filevault.validator</groupId>
@@ -19,6 +19,7 @@
   </scm>
 
     <dependencies>
+        <!-- version used in filevault-package-maven-plugin 1.1.0 -->
         <dependency>
             <groupId>org.apache.jackrabbit.vault</groupId>
             <artifactId>vault-validation</artifactId>
@@ -61,10 +62,12 @@
             <artifactId>metainf-services</artifactId>
             <version>1.8</version>
             <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
+            <scope>provided</scope>
         </dependency>
         <!-- TEST -->
         <dependency>

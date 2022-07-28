@@ -1,4 +1,3 @@
-
 package biz.netcentric.filevault.validator.aem.classification;
 
 /*-
@@ -8,7 +7,7 @@ package biz.netcentric.filevault.validator.aem.classification;
  * Copyright (C) 2020 Netcentric - A Cognizant Digital Business
  * %%
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * #L%
@@ -51,7 +50,7 @@ import org.xml.sax.SAXException;
 
 import biz.netcentric.filevault.validator.aem.classification.map.MutableContentClassificationMapImpl;
 
-public class AemClassificationValidatorTest {
+class AemClassificationValidatorTest {
     private MutableContentClassificationMap classificationMap;
 
     private AemClassificationValidator validator;
@@ -62,7 +61,7 @@ public class AemClassificationValidatorTest {
     private static final Path EXAMPLE_DOCVIEW_PATH = Paths.get("/apps/example/.content.xml");
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         classificationMap = new MutableContentClassificationMapImpl("1.0.0");
         classificationMap.put("/libs/abstract", ContentClassification.ABSTRACT, "abstractremark");
         classificationMap.put("/libs/final", ContentClassification.FINAL, "finalremark");
@@ -73,7 +72,7 @@ public class AemClassificationValidatorTest {
     }
 
     @Test
-    public void testHtlIncludePattern() {
+    void testHtlIncludePattern() {
         // use single quotes in expression string literals
         assertFalse(AemClassificationValidator.HTL_INCLUDE_OVERWRITING_RESOURCE_TYPE.matcher("<article data-sly-resource=\"${ @ path='path/to/resource'}\"></article>").find());
         assertFalse(AemClassificationValidator.HTL_INCLUDE_OVERWRITING_RESOURCE_TYPE.matcher("<article data-sly-resource=\"${ @ path='path/to/resource',removeSelectors}\"></article>").find());
@@ -108,7 +107,7 @@ public class AemClassificationValidatorTest {
     }
 
     @Test
-    public void testReferencingViolationsInDocviewXml()
+    void testReferencingViolationsInDocviewXml()
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, FileSystemException {
         ContentUsage usage = ContentUsage.REFERENCE;
         assertJcrDocViewValidationMessages(validator, EXAMPLE_DOCVIEW_PATH, "/referencing.xml",
@@ -125,7 +124,7 @@ public class AemClassificationValidatorTest {
     }
 
     @Test
-    public void testReferencingWithTrailingSlashesInDocviewXml()
+    void testReferencingWithTrailingSlashesInDocviewXml()
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, FileSystemException {
         Assertions.assertEquals(Collections.singletonList(
                 new ValidationViolation("myId", ValidationMessageSeverity.ERROR, "Resource path must not end with '/' but is 'core/wcm/components/teaser/v1/teaser/'", EXAMPLE_DOCVIEW_PATH, Paths.get(""), "/apps/example", 8, 107, null)
@@ -133,7 +132,7 @@ public class AemClassificationValidatorTest {
     }
 
     @Test
-    public void testInheritingViolationsInDocviewXml()
+    void testInheritingViolationsInDocviewXml()
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, FileSystemException {
         
         ContentUsage usage = ContentUsage.INHERIT;
@@ -151,7 +150,7 @@ public class AemClassificationValidatorTest {
     }
 
     @Test
-    public void testOverlayingViolationsInDocviewXml()
+    void testOverlayingViolationsInDocviewXml()
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, FileSystemException {
         ContentUsage usage = ContentUsage.OVERLAY;
         assertJcrDocViewValidationMessages(validator, OVERLAY_DOCVIEW_PATH, "/overlaying.xml",
@@ -163,7 +162,7 @@ public class AemClassificationValidatorTest {
     }
 
     @Test
-    public void testOverlayingViolationsInSimpleFiles()
+    void testOverlayingViolationsInSimpleFiles()
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, FileSystemException {
         assertNull(validator.validate("/apps/abstract"));
         assertNull(validator.validate("/apps/abstract/test11"));
@@ -177,7 +176,7 @@ public class AemClassificationValidatorTest {
     }
 
     @Test
-    public void testReferencingViolationsInHtlAndJsp() throws IOException {
+    void testReferencingViolationsInHtlAndJsp() throws IOException {
         // check content of JSPs and HTLs
         assertTrue(validator.shouldValidateJcrData(Paths.get("/apps/mytest/component/componentA/componentA.html")));
         assertTrue(validator.shouldValidateJcrData(Paths.get("/apps/mytest/component/componentA/componentA.jsp")));
@@ -207,7 +206,7 @@ public class AemClassificationValidatorTest {
         private final ContentClassification classification;
         private final String remark;
 
-        public ClassificationViolation(String nodePath, int line, int column, ContentUsage usage, String targetResourceType, ContentClassification classification,
+        ClassificationViolation(String nodePath, int line, int column, ContentUsage usage, String targetResourceType, ContentClassification classification,
                 String remark) {
             super();
             this.nodePath = nodePath;

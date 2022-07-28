@@ -7,7 +7,7 @@ package biz.netcentric.filevault.validator.aem.classification;
  * Copyright (C) 2020 Netcentric - A Cognizant Digital Business
  * %%
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * #L%
@@ -30,10 +30,10 @@ import biz.netcentric.filevault.validator.aem.classification.map.CompositeConten
 import biz.netcentric.filevault.validator.aem.classification.map.ContentClassificationMapImpl;
 import biz.netcentric.filevault.validator.aem.classification.map.MutableContentClassificationMapImpl;
 
-public class AemClassificationValidatorFactoryTest {
+class AemClassificationValidatorFactoryTest {
 
     @Test
-    public void testGetSeverityPerClassification() {
+    void testGetSeverityPerClassification() {
         Map<ContentClassification, ValidationMessageSeverity> severityPerClassification = new HashMap<>();
         severityPerClassification.put(ContentClassification.FINAL, ValidationMessageSeverity.WARN);
         severityPerClassification.put(ContentClassification.INTERNAL, ValidationMessageSeverity.ERROR);
@@ -42,47 +42,47 @@ public class AemClassificationValidatorFactoryTest {
     }
 
     @Test
-    public void testGetSeverityPerClassificationWithNullParameter() {
+    void testGetSeverityPerClassificationWithNullParameter() {
         Map<ContentClassification, ValidationMessageSeverity> severityPerClassification = new HashMap<>();
         assertEquals(severityPerClassification, AemClassificationValidatorFactory.getSeverityPerClassification(null));
     }
 
     @Test
-    public void testGetSeverityPerClassificationWithEmptyParameter() {
+    void testGetSeverityPerClassificationWithEmptyParameter() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> { AemClassificationValidatorFactory.getSeverityPerClassification(""); });
     }
 
     @Test
-    public void testGetSeverityPerClassificationWithInvalidParameter() {
+    void testGetSeverityPerClassificationWithInvalidParameter() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> { AemClassificationValidatorFactory.getSeverityPerClassification("FINAL:WARN"); });
     }
 
     @Test
-    public void testGetSeverityPerClassificationWithInvalidParameter2() {
+    void testGetSeverityPerClassificationWithInvalidParameter2() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> { AemClassificationValidatorFactory.getSeverityPerClassification("INVALID:WARN"); });
     }
 
     @Test
-    public void testGetSeverityPerClassificationWithInvalidParameter3() {
+    void testGetSeverityPerClassificationWithInvalidParameter3() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> { AemClassificationValidatorFactory.getSeverityPerClassification(" =ERROR,FINAL=WARN"); });
     }
 
     @Test
-    public void testValidateResourcePathPatternWithValidPatterns() {
+    void testValidateResourcePathPatternWithValidPatterns() {
         AemClassificationValidatorFactory.validateResourcePathPattern("/libs");
         AemClassificationValidatorFactory.validateResourcePathPattern("/libs/some/path");
         AemClassificationValidatorFactory.validateResourcePathPattern(".*/test");
     }
 
     @Test
-    public void testValidateResourcePathPatternWithInvalidPatterns() {
+    void testValidateResourcePathPatternWithInvalidPatterns() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> AemClassificationValidatorFactory.validateResourcePathPattern("relative/path"));
         Assertions.assertThrows(IllegalArgumentException.class, () -> AemClassificationValidatorFactory.validateResourcePathPattern("/"));
         Assertions.assertThrows(IllegalArgumentException.class, () -> AemClassificationValidatorFactory.validateResourcePathPattern("[^/].*"));
     }
 
     @Test
-    public void testCreateValidator() {
+    void testCreateValidator() {
         AemClassificationValidatorFactory factory = new AemClassificationValidatorFactory();
         Map<String, String> options = new HashMap<>();
         options.put("maps", "tccl:valid-classification.map");
@@ -125,7 +125,7 @@ public class AemClassificationValidatorFactoryTest {
         private final ValidationMessageSeverity defaultSeverity;
         private Map<String, String> options;
         
-        public ValidatorSettingsImpl(boolean isDisabled, ValidationMessageSeverity defaultSeverity, Map<String, String> options) {
+        ValidatorSettingsImpl(boolean isDisabled, ValidationMessageSeverity defaultSeverity, Map<String, String> options) {
             super();
             this.isDisabled = isDisabled;
             this.defaultSeverity = defaultSeverity;
@@ -133,17 +133,20 @@ public class AemClassificationValidatorFactoryTest {
         }
 
         @Override
-        public @NotNull ValidationMessageSeverity getDefaultSeverity() {
+        @NotNull
+        public ValidationMessageSeverity getDefaultSeverity() {
             return defaultSeverity;
         }
 
         @Override
-        public @NotNull Map<String, String> getOptions() {
+        @NotNull
+        public Map<String, String> getOptions() {
             return options;
         }
 
         @Override
-        public boolean isDisabled() {
+        public
+        boolean isDisabled() {
             return isDisabled;
         }
 

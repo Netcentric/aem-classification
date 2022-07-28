@@ -7,7 +7,7 @@ package biz.netcentric.filevault.validator.aem.classification.classpathurl;
  * Copyright (C) 2020 Netcentric - A Cognizant Digital Business
  * %%
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * #L%
@@ -25,17 +25,17 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class URLFactoryTest {
+class URLFactoryTest {
 
     @Test
-    public void testTcclUrl() throws MalformedURLException, IOException {
+    void testTcclUrl() throws MalformedURLException, IOException {
         try (InputStream input = URLFactory.createURL("tccl:test.file").openStream()) {
             Assertions.assertEquals("test", IOUtils.toString(input, StandardCharsets.UTF_8));
         }
     }
 
     @Test
-    public void testFileUrl() throws MalformedURLException, IOException {
+    void testFileUrl() throws MalformedURLException, IOException {
         Path tmpPath;
         try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("test.file")) {
             // copy to tmp file

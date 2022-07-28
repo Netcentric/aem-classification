@@ -7,7 +7,7 @@ package biz.netcentric.filevault.validator.aem.classification.map;
  * Copyright (C) 2020 Netcentric - A Cognizant Digital Business
  * %%
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * #L%
@@ -15,14 +15,12 @@ package biz.netcentric.filevault.validator.aem.classification.map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.regex.Pattern;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -30,13 +28,11 @@ import org.junit.jupiter.api.Test;
 import biz.netcentric.filevault.validator.aem.classification.ContentClassification;
 import biz.netcentric.filevault.validator.aem.classification.ContentClassificationMap;
 import biz.netcentric.filevault.validator.aem.classification.MutableContentClassificationMap;
-import biz.netcentric.filevault.validator.aem.classification.map.ContentClassificationMapImpl;
-import biz.netcentric.filevault.validator.aem.classification.map.MutableContentClassificationMapImpl;
 
-public class ContentClassificationMapImplTest {
+class ContentClassificationMapImplTest {
 
     @Test
-    public void testValidMap() throws IOException {
+    void testValidMap() throws IOException {
         try (InputStream input = ContentClassificationMapImplTest.class.getResourceAsStream("/valid-classification.map")) {
             ContentClassificationMap map = new ContentClassificationMapImpl(input, "valid-classification.map");
             MutableContentClassificationMap expectedMap = new MutableContentClassificationMapImpl("Simple");
@@ -46,7 +42,7 @@ public class ContentClassificationMapImplTest {
     }
 
     @Test
-    public void testGetContentClassificationForResourceType() {
+    void testGetContentClassificationForResourceType() {
         ContentClassificationMapImpl map = new ContentClassificationMapImpl("1.0");
         map.put("/sometype", ContentClassification.FINAL, "someremark");
         map.put("/sometype/someotherchild", ContentClassification.ABSTRACT, "test");
@@ -65,34 +61,34 @@ public class ContentClassificationMapImplTest {
     }
 
     @Test
-    public void testGetContentClassificationForResourceTypeWithoutClassification() {
+    void testGetContentClassificationForResourceTypeWithoutClassification() {
         ContentClassificationMapImpl map = new ContentClassificationMapImpl("somelabel");
         Assertions.assertThrows(IllegalStateException.class,() -> { map.getContentClassificationAndRemarkForResourcePath("/sometype", null); });
     }
 
     
     @Test
-    public void testGetContentClassificationForInvalidResourceType() {
+    void testGetContentClassificationForInvalidResourceType() {
         ContentClassificationMapImpl map = new ContentClassificationMapImpl("somelabel");
         map.put("/sometype", ContentClassification.FINAL, "someremark");
         Assertions.assertThrows(IllegalStateException.class,() -> { map.getContentClassificationAndRemarkForResourcePath("/sometype/", null); });
     }
 
     @Test
-    public void testGetContentClassificationForEmptyResourceType() {
+    void testGetContentClassificationForEmptyResourceType() {
         ContentClassificationMapImpl map = new ContentClassificationMapImpl("somelabel");
         map.put("/sometype", ContentClassification.FINAL, "someremark");
         Assertions.assertEquals(new SimpleEntry<>(ContentClassification.PUBLIC, null), map.getContentClassificationAndRemarkForResourcePath("", null));
     }
 
     @Test
-    public void testPutWithARelativeResourceType() {
+    void testPutWithARelativeResourceType() {
         ContentClassificationMapImpl map = new ContentClassificationMapImpl("somelabel");
         Assertions.assertThrows(IllegalArgumentException.class,() -> { map.put("relativeresourcetype", ContentClassification.PUBLIC, null); });
     }
 
     @Test
-    public void testInvalidMap() throws IOException {
+    void testInvalidMap() throws IOException {
         try (InputStream input = ContentClassificationMapImplTest.class.getResourceAsStream("/invalid-classification.map")) {
             Assertions.assertThrows(IllegalArgumentException.class,() -> { new ContentClassificationMapImpl(input, "invalid-classification.map"); });
         }
