@@ -5,7 +5,7 @@
     <name>AEM Classification Maps</name>
     <description>Classification Maps to be used with the validator</description>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <parent>
         <groupId>biz.netcentric.filevault.validator</groupId>
         <artifactId>aem-classification</artifactId>
@@ -22,6 +22,6 @@
         <connection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</developerConnection>
         <url>https://github.com/Netcentric/aem-classification.git</url>
-      <tag>aem-classification-maps-1.0.1</tag>
+      <tag>HEAD</tag>
   </scm>
 </project>
