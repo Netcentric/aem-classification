@@ -11,8 +11,9 @@
         <version>1.0.1</version>
     </parent>
     
+    <!-- 
     <modules>
         <module>aem-classification-map-repo-annotations</module>
         <module>aem-classification-map-deprecations</module>
-    </modules>
+    </modules> -->
 </project>
