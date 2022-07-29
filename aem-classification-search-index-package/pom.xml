@@ -2,13 +2,13 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>aem-classification-search-index-package</artifactId>
     <name>AEM Classification Index Package</name>
+    <version>1.1.0-SNAPSHOT</version>
     <description>Content Package containing the Oak index definitions to be able to query the content classifications.</description>
-
     <packaging>content-package</packaging>
     <parent>
         <groupId>biz.netcentric.filevault.validator</groupId>
         <artifactId>aem-classification</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
 
     <properties>

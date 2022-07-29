@@ -2,26 +2,18 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>biz.netcentric.filevault.validator.maps</groupId>
     <artifactId>aem-classification-maps</artifactId>
-    <name>AEM Classification Maps</name>
+    <name>AEM Classification Maps Reactor</name>
     <description>Classification Maps to be used with the validator</description>
     <packaging>pom</packaging>
-    <version>1.0.2-SNAPSHOT</version>
     <parent>
         <groupId>biz.netcentric.filevault.validator</groupId>
         <artifactId>aem-classification</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
-    
-    <!-- 
+
     <modules>
         <module>aem-classification-map-repo-annotations</module>
         <module>aem-classification-map-deprecations</module>
-    </modules> -->
+    </modules>
 
-   <scm>
-        <connection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</developerConnection>
-        <url>https://github.com/Netcentric/aem-classification.git</url>
-      <tag>HEAD</tag>
-  </scm>
 </project>

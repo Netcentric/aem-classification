@@ -3,13 +3,14 @@
     <artifactId>aem-classification-maven-plugin</artifactId>
     <name>AEM Classification Maven Plugin</name>
     <description>Maven plugin to generate classification maps from existing AEM instances (https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/sustainable-upgrades.html).</description>
-
     <packaging>maven-plugin</packaging>
     <parent>
         <groupId>biz.netcentric.filevault.validator</groupId>
         <artifactId>aem-classification</artifactId>
         <version>1.0.2-SNAPSHOT</version>
     </parent>
+
+    <url>https://netcentric.github.io/aem-classification/</url>
 
     <prerequisites>
         <maven>${maven.version}</maven>

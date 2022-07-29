@@ -1,15 +1,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>biz.netcentric.filevault.validator.maps</groupId>
     <artifactId>aem-classification-map-deprecations</artifactId>
     <version>6.5.0.1-SNAPSHOT</version>
     <name>AEM Classification Map for Deprecations</name>
     <description>Classification Maps containing deprecated resource types (derived from release notes)</description>
 
     <parent>
-        <groupId>biz.netcentric.filevault.validator.maps</groupId>
-        <artifactId>aem-classification-maps</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <groupId>biz.netcentric.filevault.validator</groupId>
+        <artifactId>aem-classification</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
+        <relativePath>../..</relativePath>
     </parent>
-    
-    
+
+    <scm>
+        <connection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</developerConnection>
+        <url>https://github.com/Netcentric/aem-classification/tree/${project.scm.tag}/aem-classification-maps/aem-classification-map-deprecations</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
