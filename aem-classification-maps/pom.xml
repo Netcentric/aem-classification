@@ -18,7 +18,10 @@
         <module>aem-classification-map-deprecations</module>
     </modules> -->
 
-  <scm>
-    <tag>aem-classification-maps-1.0.1</tag>
+   <scm>
+        <connection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</developerConnection>
+        <url>https://github.com/Netcentric/aem-classification.git</url>
+      <tag>HEAD</tag>
   </scm>
 </project>
