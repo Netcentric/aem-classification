@@ -1,4 +1,4 @@
-# AEM 2021.6.5586.20210628T210726Z
+# AEM 2022.7.8085.20220725T140323Z
 /,PUBLIC
 /libs/clientlibs/ckeditor,INTERNAL
 /libs/clientlibs/granite,INTERNAL
@@ -6,6 +6,7 @@
 /libs/clientlibs/granite/datavisualization,FINAL
 /libs/core/wcm/components/form/container/v1/container/new,INTERNAL_DEPRECATED_ANNOTATION,"Deprecated since Core Components 2.8.0: The Core Form Container now uses the responsive grid new component by default, overriding this in a proxy will not have an effect."
 /libs/core/wcm/components/form/container/v2/container/new,INTERNAL_DEPRECATED_ANNOTATION,"Deprecated since Core Components 2.8.0: The Core Form Container now uses the responsive grid new component by default, overriding this in a proxy will not have an effect."
+/libs/core/wcm/components/sharing/v1/sharing,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since Core Components 2.18.0: Should not be used in new projects
 /libs/cq/Page/campaign,INTERNAL
 /libs/cq/address,PUBLIC
 /libs/cq/address/components/addressbook,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
@@ -51,6 +52,7 @@
 /libs/cq/cloudserviceconfigs/widgets,INTERNAL
 /libs/cq/cloudservicesprovisioning,INTERNAL
 /libs/cq/compat,INTERNAL
+/libs/cq/contentinsight/clientlibs/admin,FINAL
 /libs/cq/contentinsight/clientlibs/cloudconfig,FINAL
 /libs/cq/contentinsight/clientlibs/contentinsight,FINAL
 /libs/cq/contentinsight/clientlibs/editor,FINAL
@@ -62,6 +64,7 @@
 /libs/cq/contentinsight/content/createtask,INTERNAL
 /libs/cq/contentinsight/content/providersettings,INTERNAL
 /libs/cq/contentinsight/content/proxy,INTERNAL
+/libs/cq/contentinsight/content/reportimporter,INTERNAL
 /libs/cq/contentinsight/install,INTERNAL
 /libs/cq/contentinsight/templates/brightedge-cloudservice-config,FINAL
 /libs/cq/core/content/nav/tools/cloudservices/ups,INTERNAL
@@ -93,9 +96,6 @@
 /libs/cq/core/content/projects/worklist,INTERNAL
 /libs/cq/dashboards,INTERNAL
 /libs/cq/dtm-reactor,INTERNAL
-/libs/cq/dtm/components,INTERNAL
-/libs/cq/dtm/templates/dynamictagmanagement,FINAL
-/libs/cq/dtm/widgets,INTERNAL
 /libs/cq/experience-fragments/components/admin/clientlib,INTERNAL
 /libs/cq/experience-fragments/components/admin/createxfwizard/page,FINAL
 /libs/cq/experience-fragments/components/admin/editor,INTERNAL
@@ -122,6 +122,7 @@
 /libs/cq/flow,INTERNAL
 /libs/cq/flow/widgets,INTERNAL
 /libs/cq/graphql/sites/admin,INTERNAL
+/libs/cq/graphql/sites/graphiql,INTERNAL
 /libs/cq/gui/components/authoring/allowedcomponents,INTERNAL
 /libs/cq/gui/components/authoring/annotationsbadge,INTERNAL
 /libs/cq/gui/components/authoring/assetfinder,INTERNAL
@@ -158,11 +159,14 @@
 /libs/cq/gui/components/projects/admin/pim/links,INTERNAL
 /libs/cq/gui/components/projects/admin/reviewtd,INTERNAL
 /libs/cq/gui/components/workflow,INTERNAL
+/libs/cq/gui/content/common/listworkflows,INTERNAL
 /libs/cq/gui/content/editor,INTERNAL
 /libs/cq/i18n,INTERNAL
 /libs/cq/inbox/content/inbox,INTERNAL
 /libs/cq/inbox/extensions/itemtyperegistry/task/ayncjob-status-notification,INTERNAL
 /libs/cq/inbox/gui,INTERNAL
+/libs/cq/microsoftoffice,INTERNAL
+/libs/cq/microsoftoffice/content,PUBLIC
 /libs/cq/personalization/clientlib/personalization/integrations/commons,FINAL
 /libs/cq/personalization/clientlib/personalization/jcarousel,FINAL
 /libs/cq/personalization/clientlib/personalization/kernel,FINAL
@@ -294,6 +298,7 @@
 /libs/cq/workflow/components/model/step,PUBLIC
 /libs/cq/workflow/components/models,INTERNAL
 /libs/cq/workflow/components/or_split.clientlib,INTERNAL
+/libs/cq/workflow/components/pages/clientlib,INTERNAL
 /libs/cq/workflow/components/pages/model,INTERNAL
 /libs/cq/workflow/components/set_variable.clientlib,INTERNAL
 /libs/cq/workflow/components/workflow/absoluttimeautoadvancer,FINAL
@@ -397,6 +402,7 @@
 /libs/dam/content/snippet,INTERNAL
 /libs/dam/content/stock,INTERNAL
 /libs/dam/gui,PUBLIC
+/libs/dam/gui/components/admin/references/launchcopy,INTERNAL
 /libs/dam/gui/components/s7dam,INTERNAL
 /libs/dam/gui/components/s7dam/batchsetpresets/pathfield,FINAL
 /libs/dam/gui/content/adhocassetsharepage,INTERNAL
@@ -415,6 +421,7 @@
 /libs/dam/gui/content/assets/lightboxassets,FINAL
 /libs/dam/gui/content/assets/metadataeditor/jcr:content/actions/annotate/granite:rendercondition/contentfragment,INTERNAL
 /libs/dam/gui/content/assets/metadataeditor/jcr:content/actions/editasset/granite:rendercondition/contentfragment,INTERNAL
+/libs/dam/gui/content/assetsconfigurations,INTERNAL
 /libs/dam/gui/content/assetselector,INTERNAL
 /libs/dam/gui/content/assetsrouter,INTERNAL
 /libs/dam/gui/content/collections,PUBLIC
@@ -463,6 +470,7 @@
 /libs/dam/gui/coral/components/admin/assetinsights/recentusages,INTERNAL
 /libs/dam/gui/coral/components/admin/assetinsights/trendreport,INTERNAL
 /libs/dam/gui/coral/components/admin/assetinsights/wizard,INTERNAL
+/libs/dam/gui/coral/components/admin/assetsconfigurations,INTERNAL
 /libs/dam/gui/coral/components/admin/audiopicker,INTERNAL
 /libs/dam/gui/coral/components/admin/audiosrcpicker,INTERNAL
 /libs/dam/gui/coral/components/admin/autotag,INTERNAL
@@ -482,6 +490,7 @@
 /libs/dam/gui/coral/components/admin/collections/contentrenderer/directorynavigation,PUBLIC
 /libs/dam/gui/coral/components/admin/collections/contentrenderer/rowasset,PUBLIC
 /libs/dam/gui/coral/components/admin/collections/contentrenderer/rowdirectory,PUBLIC
+/libs/dam/gui/coral/components/admin/colortags,INTERNAL
 /libs/dam/gui/coral/components/admin/contentchecker,INTERNAL
 /libs/dam/gui/coral/components/admin/contentrenderer,PUBLIC
 /libs/dam/gui/coral/components/admin/createfolder,PUBLIC
@@ -489,7 +498,9 @@
 /libs/dam/gui/coral/components/admin/createlivecopywizard,PUBLIC
 /libs/dam/gui/coral/components/admin/createsnippet,INTERNAL
 /libs/dam/gui/coral/components/admin/customsearch,PUBLIC
+/libs/dam/gui/coral/components/admin/customsearch/formbuilder/predicatefields/assetcolorpredicatefield,INTERNAL
 /libs/dam/gui/coral/components/admin/customsearch/savedsearch,INTERNAL
+/libs/dam/gui/coral/components/admin/customsearch/searchpredicates/assetcolorpredicate,INTERNAL
 /libs/dam/gui/coral/components/admin/customthumb,PUBLIC
 /libs/dam/gui/coral/components/admin/customthumb/clientlibs,INTERNAL
 /libs/dam/gui/coral/components/admin/customthumb/leftpanel,FINAL
@@ -558,6 +569,7 @@
 /libs/dam/gui/coral/components/admin/schemaforms/formbuilder/checkbox,INTERNAL
 /libs/dam/gui/coral/components/admin/schemaforms/formbuilder/formfieldproperties,PUBLIC
 /libs/dam/gui/coral/components/admin/schemaforms/formbuilder/formfields,PUBLIC
+/libs/dam/gui/coral/components/admin/schemaforms/formbuilder/formfields/v2/colortagsfield,INTERNAL
 /libs/dam/gui/coral/components/admin/schemaforms/formbuilder/pimfield,INTERNAL
 /libs/dam/gui/coral/components/admin/schemaforms/formbuilder/referencefield,INTERNAL
 /libs/dam/gui/coral/components/admin/schemaforms/formbuilder/rendercondition,INTERNAL
@@ -1106,6 +1118,7 @@
 /libs/sightly/js/3rd-party/q.js,FINAL
 /libs/tsdk,INTERNAL
 /libs/tsdk/handlebars,INTERNAL
+/libs/unifiedshell/components,FINAL
 /libs/wcm/core/content/editor/jcr:content,INTERNAL
 /libs/wcm/core/content/editor/jcr:content/sidepanels/edit/items/tabs/items/remoteassetTab,INTERNAL
 /libs/wcm/core/content/editor/jcr:content/sidepanels/plugin/associatedcontent,INTERNAL
