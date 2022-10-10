@@ -44,7 +44,7 @@ where `classification` is one of
 
 (in order from most restricted to least restricted). 
 The explanation for those can be found in the [Adobe documentation][1].
-The CSV format is based on [RFC 4180][7]. In addition a comment starting with `#` on the first line is supposed to contain a label for the map (like the underlying AEM version). `path` is supposed to be an absolute path of a specific resource.
+The CSV format is based on [RFC 4180][7]. In addition a comment starting with `#` on the first line is supposed to contain a label for the map (like the underlying AEM version). `path` is supposed to be an absolute JCR path of a specific node.
 
 # Usage with Maven
 
