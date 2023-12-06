@@ -69,13 +69,13 @@ You can use this validator with the [FileVault Package Maven Plugin][3] in versi
     <dependency>
       <groupId>biz.netcentric.filevault.validator</groupId>
       <artifactId>aem-classification-validator</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.1</version>
     </dependency>
     <!-- the dependency containing the actual classification map -->
     <dependency>
       <groupId>biz.netcentric.filevault.validator.maps</groupId>
       <artifactId>aem-classification-map-repo-annotations</artifactId>
-      <version>6.5.3.0</version>
+      <version>6.5.13.0</version>
     </dependency>
     <dependency>
       <groupId>biz.netcentric.filevault.validator.maps</groupId>
