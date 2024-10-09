@@ -14,14 +14,18 @@ package biz.netcentric.filevault.validator.aem.classification.mojo;
  */
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.OutputStream;
+import java.net.URI;
 import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Base64;
 import java.util.Date;
 import java.util.EnumSet;
@@ -31,10 +35,9 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.felix.utils.json.JSONParser;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -64,7 +67,7 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
      * the base URL where AEM is deployed
      */
     @Parameter(property="baseUrl", defaultValue="http://localhost:4502")
-    URL baseUrl;
+    URI baseUrl;
     
     /**
      * the user name to access the {@link baseUrl}
@@ -84,12 +87,13 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
      */
     @Parameter(property="relativeFileNameInJar", required = false)
     File relativeFileNameInJar;
-    
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
+        HttpClient httpClient = HttpClient.newHttpClient();
         try {
-            String aemVersion = getAemVersion();
+            String aemVersion = getAemVersion(httpClient);
             
             log.warn("Make sure that the relevant search index definitions are deployed on AEM at " + baseUrl + ". Otherwise this goal will fail!");
             log.info("Start retrieving the classification and deprecation data from " + baseUrl);
@@ -102,31 +106,34 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
                 if (classification.isLabelMixin() == false) {
                     continue;
                 }
-                retrieveClassificationForMixin(classification, map);
+                retrieveClassificationForMixin(httpClient, classification, map);
             }
             
             // 2. update map with deprecation entries
-            retrieveDeprecatedResourceTypes(map);
+            retrieveDeprecatedResourceTypes(httpClient, map);
             
             // 3. persist the map
-            File outputFile = File.createTempFile("contentclassification", ".map");
-            try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile)) {
+            Path outputFile = Files.createTempFile("contentclassification", ".map");
+            try (OutputStream fileOutputStream = Files.newOutputStream(outputFile)) {
                 map.write(fileOutputStream);
             }
             log.info("Written classification map to " + outputFile + " containing " + map.size() + " entries.");
             
             // 4. optionally wrap in a JAR
             if (relativeFileNameInJar != null) {
-                File jarFile = createJarWrapper(outputFile, relativeFileNameInJar);
+                File jarFile = createJarWrapper(outputFile, relativeFileNameInJar.toPath());
                 log.info("Written wrapper jar to " + jarFile);
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new MojoFailureException("Could not retrieve classification metadata: " + e.getMessage(), e);
         } catch(IOException|IllegalStateException e) {
-            throw new MojoFailureException("Could not generate classification JAR:" + e.getMessage(), e);
+            throw new MojoFailureException("Could not retrieve classification metadata: " + e.getMessage(), e);
         }
     }
 
-    String getAemVersion() throws IOException {
-        try (InputStream input = getHttpConnectionInputStream("/libs/granite/operations/content/systemoverview/export.json")) {
+    String getAemVersion(HttpClient httpClient) throws IOException, InterruptedException {
+        try (InputStream input = downloadFromAem(httpClient, "/libs/granite/operations/content/systemoverview/export.json")) {
             JSONParser parser = new JSONParser(input);
             Map<String, Object> response = parser.getParsed();
             getLog().debug("Received JSON response " + response);
@@ -142,7 +149,7 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    void retrieveClassificationForMixin(ContentClassification classification, MutableContentClassificationMap map) throws IOException {
+    void retrieveClassificationForMixin(HttpClient httpClient, ContentClassification classification, MutableContentClassificationMap map) throws IOException, InterruptedException {
         // Uses the crxde search to find the current classification
         // (http://localhost:8080/crx/de/query.jsp?_dc=1536334082630&_charset_=utf-8&type=JCR_SQL2&stmt=SELECT%20*%20FROM%20%5Bgranite%3AInternalArea%5D%0A&showResults=true)
         // the index is crucial for that though (property index limited to properties jcr:primaryType and jcr:mixinTypes)
@@ -150,7 +157,7 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
         String query = "SELECT * FROM [" + classification.getLabel() + "]";
         StringBuilder urlParameters = new StringBuilder();
         urlParameters.append("_dc=").append(new Date().getTime()).append("&_charset_=utf-8&type=JCR-SQL2&stmt=").append(URLEncoder.encode(query, "ASCII")).append("&showResults=true");
-        try (InputStream input = getHttpConnectionInputStream( "/crx/de/query.jsp?" + urlParameters)) {
+        try (InputStream input = downloadFromAem(httpClient, "/crx/de/query.jsp?" + urlParameters)) {
             JSONParser parser = new JSONParser(input);
             Map<String, Object> response = parser.getParsed();
             getLog().debug("Received JSON response " + response);
@@ -171,7 +178,7 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
             }
             for (Map<String, Object> result : (List<Map<String, Object>>)results) {
                 String resourceType = (String)result.get("path");
-                if (StringUtils.isNotBlank(resourceType)) {
+                if (resourceType != null) {
                     map.put(resourceType, classification, null);
                 }
             }
@@ -181,11 +188,11 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
     }
 
     @SuppressWarnings("unchecked")
-    void retrieveDeprecatedResourceTypes(MutableContentClassificationMap map) throws IOException {
+    void retrieveDeprecatedResourceTypes(HttpClient httpClient, MutableContentClassificationMap map) throws IOException, InterruptedException {
         // uses query builder api to retrieve all deprecation metadata
         String query = "1_property=cq:deprecated&1_property.operation=exists&p.limit=-1&p.hits=selective&p.properties=" + URLEncoder.encode("jcr:mixinTypes jcr:path cq:deprecated cq:deprecatedReason", "ASCII");
         EnumSet<ContentUsage> allContentUsages = EnumSet.allOf(ContentUsage.class);
-        try (InputStream input = getHttpConnectionInputStream( "/bin/querybuilder.json?" + query)) {
+        try (InputStream input = downloadFromAem(httpClient, "/bin/querybuilder.json?" + query)) {
             JSONParser parser = new JSONParser(input);
             Map<String, Object> response = parser.getParsed();
             getLog().debug("Received JSON response " + response);
@@ -211,31 +218,37 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
     }
 
     @SuppressWarnings("java:S2647") // basic auth is ok in this context
-    private InputStream getHttpConnectionInputStream(String path) throws IOException {
-        URL url = new URL(baseUrl, path);
-        getLog().debug("Connecting to " + url + "...");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    private InputStream downloadFromAem(HttpClient httpClient, String path) throws IOException, InterruptedException {
         String credentials = username+":"+password;
-        // use basic auth
-        String encoded = Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));  //Java 8
-        connection.setRequestProperty("Authorization", "Basic "+encoded);
-        return connection.getInputStream();
+        String encoded = Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
+        URI uri = baseUrl.resolve(path);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                // preemptive-auth only natively supported once authentication in cache (after first successful request), https://stackoverflow.com/a/58612586
+                .header("Authorization", "Basic "+encoded)
+                .build();
+        getLog().debug("Connecting to " + uri + "...");
+        HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
+        return response.body();
     }
 
-    File createJarWrapper(File sourceFile, File relativeFileNameInJar) throws IOException {
+    File createJarWrapper(Path sourceFile, Path relativeFileNameInJar) throws IOException {
         Manifest manifest = new Manifest();
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
         File outputFile = File.createTempFile("contentclassification", ".jar");
         try (JarOutputStream target = new JarOutputStream(new FileOutputStream(outputFile), manifest)) {
-            // convert to forward slashes
-            JarEntry entry = new JarEntry(FilenameUtils.separatorsToUnix(relativeFileNameInJar.getPath()));
-            entry.setTime(sourceFile.lastModified());
+            JarEntry entry = new JarEntry(getPathWithUnixSeparators(relativeFileNameInJar));
+            entry.setTime(Files.getLastModifiedTime(sourceFile).toMillis());
             target.putNextEntry(entry);
-            try (InputStream input = new FileInputStream(sourceFile)) {
-                IOUtils.copy(input, target);
+            try (InputStream input = Files.newInputStream(sourceFile)) {
+                input.transferTo(target);
             }
             target.closeEntry();
         }
         return outputFile;
+    }
+
+    static String getPathWithUnixSeparators(Path path) {
+        return StreamSupport.stream(path.spliterator(), false).map(Path::toString).collect(Collectors.joining("/"));
     }
 }
