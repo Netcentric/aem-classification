@@ -53,9 +53,7 @@
 
     <properties>
         <maven.version>3.3.9</maven.version>
-        <java.target.version>8</java.target.version> <!-- used for compiler plugin and animal-sniffer, for compatibility reasons with Java 9 only the values 6,7,8 and 9 is allowed -->
-        <maven.compiler.target>1.${java.target.version}</maven.compiler.target>
-        <maven.compiler.source>${maven.compiler.target}</maven.compiler.source>
+        <maven.compiler.release>8</maven.compiler.release> <!-- used for compiler and javadoc plugin -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.9.0</junit.jupiter.version>
     </properties>
@@ -142,13 +140,6 @@
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.12.0</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.apache.maven.skins</groupId>
-                            <artifactId>maven-fluido-skin</artifactId>
-                            <version>1.11.1</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-scm-publish-plugin</artifactId>
@@ -230,34 +221,13 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>1.${java.target.version}</version>
+                                    <version>21</version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
                                     <version>${maven.version}</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- check with animal sniffer (http://www.mojohaus.org/animal-sniffer/), should only be used in JDKs prior version 9 -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <configuration>
-                    <signature>
-                        <groupId>org.codehaus.mojo.signature</groupId>
-                        <artifactId>java1${java.target.version}</artifactId>
-                        <version>1.0</version>
-                    </signature>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>check-java-compatibility</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -380,7 +350,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.8</version>
+                        <version>0.8.12</version>
                         <executions>
                             <execution>
                                 <id>prepare-jacoco-agent</id>
