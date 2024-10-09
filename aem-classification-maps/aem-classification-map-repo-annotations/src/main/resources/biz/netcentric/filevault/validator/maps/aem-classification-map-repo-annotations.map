@@ -1,9 +1,11 @@
-# AEM 2022.7.8085.20220725T140323Z
+# AEM 2024.10.18099.20241003T125241Z
 /,PUBLIC
 /libs/clientlibs/ckeditor,INTERNAL
 /libs/clientlibs/granite,INTERNAL
 /libs/clientlibs/granite/coralui2keys,INTERNAL
 /libs/clientlibs/granite/datavisualization,FINAL
+/libs/core/config/rewriter/franklin-rewrite,INTERNAL
+/libs/core/franklin,INTERNAL
 /libs/core/wcm/components/form/container/v1/container/new,INTERNAL_DEPRECATED_ANNOTATION,"Deprecated since Core Components 2.8.0: The Core Form Container now uses the responsive grid new component by default, overriding this in a proxy will not have an effect."
 /libs/core/wcm/components/form/container/v2/container/new,INTERNAL_DEPRECATED_ANNOTATION,"Deprecated since Core Components 2.8.0: The Core Form Container now uses the responsive grid new component by default, overriding this in a proxy will not have an effect."
 /libs/core/wcm/components/sharing/v1/sharing,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since Core Components 2.18.0: Should not be used in new projects
@@ -51,7 +53,6 @@
 /libs/cq/cloudserviceconfigs/templates/servicepage,FINAL
 /libs/cq/cloudserviceconfigs/widgets,INTERNAL
 /libs/cq/cloudservicesprovisioning,INTERNAL
-/libs/cq/compat,INTERNAL
 /libs/cq/contentinsight/clientlibs/admin,FINAL
 /libs/cq/contentinsight/clientlibs/cloudconfig,FINAL
 /libs/cq/contentinsight/clientlibs/contentinsight,FINAL
@@ -67,7 +68,7 @@
 /libs/cq/contentinsight/content/reportimporter,INTERNAL
 /libs/cq/contentinsight/install,INTERNAL
 /libs/cq/contentinsight/templates/brightedge-cloudservice-config,FINAL
-/libs/cq/core/content/nav/tools/cloudservices/ups,INTERNAL
+/libs/cq/core/content/nav/tools/cloudservices/franklin,INTERNAL
 /libs/cq/core/content/projects/addtask,INTERNAL
 /libs/cq/core/content/projects/calendarview,INTERNAL
 /libs/cq/core/content/projects/commands,INTERNAL
@@ -165,8 +166,8 @@
 /libs/cq/inbox/content/inbox,INTERNAL
 /libs/cq/inbox/extensions/itemtyperegistry/task/ayncjob-status-notification,INTERNAL
 /libs/cq/inbox/gui,INTERNAL
-/libs/cq/microsoftoffice,INTERNAL
-/libs/cq/microsoftoffice/content,PUBLIC
+/libs/cq/onedrive,INTERNAL
+/libs/cq/onedrive/content,PUBLIC
 /libs/cq/personalization/clientlib/personalization/integrations/commons,FINAL
 /libs/cq/personalization/clientlib/personalization/jcarousel,FINAL
 /libs/cq/personalization/clientlib/personalization/kernel,FINAL
@@ -244,32 +245,16 @@
 /libs/cq/personalization/widgets,INTERNAL
 /libs/cq/replication/components/youtube,INTERNAL
 /libs/cq/replication/templates/youtube,INTERNAL
-/libs/cq/searchpromote/clientlibs/searchpromote,FINAL
-/libs/cq/searchpromote/components/banners,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/breadcrumbs,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/checkboxlist,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/colors,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/dropdown,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/facet,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/linklist,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/nestedlist,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/pagination,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/ratings,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/results,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/search,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/searchpromotepage,FINAL,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/searchpromotescheduler,FINAL,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/components/sorting,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.4: Should not be used in new projects
-/libs/cq/searchpromote/install,INTERNAL
-/libs/cq/searchpromote/templates/searchpromote,FINAL
-/libs/cq/searchpromote/templates/searchpromotescheduler,FINAL
-/libs/cq/searchpromote/widgets,INTERNAL
+/libs/cq/sharepoint,INTERNAL
+/libs/cq/sharepoint/content,PUBLIC
+/libs/cq/sharepointlist,INTERNAL
+/libs/cq/sharepointlist/content,PUBLIC
 /libs/cq/tagging/components/tagcloud,INTERNAL_DEPRECATED_ANNOTATION,Deprecated since 6.5: Should not be used in new projects
 /libs/cq/target,INTERNAL
 /libs/cq/target/content,PUBLIC
 /libs/cq/testandtarget,INTERNAL
-/libs/cq/ups,INTERNAL
 /libs/cq/workflow/admin,INTERNAL
+/libs/cq/workflow/admin/console/components/stats/statsLister,INTERNAL
 /libs/cq/workflow/components/and_split.clientlib,INTERNAL
 /libs/cq/workflow/components/collection/definition,FINAL
 /libs/cq/workflow/components/collection/page,FINAL
@@ -320,7 +305,6 @@
 /libs/cq/workflow/widgets,INTERNAL
 /libs/crx,INTERNAL
 /libs/dam,PUBLIC
-/libs/dam/Asset,INTERNAL
 /libs/dam/cfm/admin/clientlibs,INTERNAL
 /libs/dam/cfm/admin/components/admin,INTERNAL
 /libs/dam/cfm/admin/components/adminpage,INTERNAL
@@ -355,6 +339,7 @@
 /libs/dam/cfm/content,INTERNAL
 /libs/dam/cfm/graphql,INTERNAL
 /libs/dam/cfm/headless,INTERNAL
+/libs/dam/cfm/maintenance,INTERNAL
 /libs/dam/cfm/models,INTERNAL
 /libs/dam/cfm/models/editor/components/childfragmentreference,INTERNAL
 /libs/dam/cfm/models/editor/components/contentreference,INTERNAL
@@ -402,6 +387,9 @@
 /libs/dam/content/snippet,INTERNAL
 /libs/dam/content/stock,INTERNAL
 /libs/dam/gui,PUBLIC
+/libs/dam/gui/components/admin/publiclinkshare,INTERNAL
+/libs/dam/gui/components/admin/publiclinkshare/view,INTERNAL
+/libs/dam/gui/components/admin/publiclinkshare/view/bootstrap,INTERNAL
 /libs/dam/gui/components/admin/references/launchcopy,INTERNAL
 /libs/dam/gui/components/s7dam,INTERNAL
 /libs/dam/gui/components/s7dam/batchsetpresets/pathfield,FINAL
