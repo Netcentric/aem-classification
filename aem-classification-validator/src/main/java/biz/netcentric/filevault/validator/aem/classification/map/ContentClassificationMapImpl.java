@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.util.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,7 +58,7 @@ public class ContentClassificationMapImpl implements ContentClassificationMap {
     protected final Map<String, String> remarkMap; // key = absolute repository path
     private String label;
 
-    private static final CSVFormat CSV_FORMAT = CSVFormat.RFC4180.withCommentMarker('#');
+    static final CSVFormat CSV_FORMAT = CSVFormat.Builder.create(CSVFormat.RFC4180).setCommentMarker('#').build();
     private static final Logger LOGGER = LoggerFactory.getLogger(ContentClassificationMapImpl.class);
 
     public ContentClassificationMapImpl(String label) {
@@ -101,7 +100,7 @@ public class ContentClassificationMapImpl implements ContentClassificationMap {
             throw new IllegalArgumentException("Only absolute resource paths are supported, but resource path given is '" + resourcePath + "'.");
         }
         classificationMap.put(resourcePath, classification);
-        if (StringUtils.isNotEmpty(remark)) {
+        if (remark != null && !remark.isEmpty()) {
             remarkMap.put(resourcePath, remark);
         }
     }
@@ -110,7 +109,7 @@ public class ContentClassificationMapImpl implements ContentClassificationMap {
     @NotNull
     public Entry<ContentClassification, String> getContentClassificationAndRemarkForResourcePath(@NotNull String resourcePath, @Nullable Collection<Pattern> whitelistedResourcePaths) {
         // ignore empty resourceTypes
-        if (StringUtils.isBlank(resourcePath)) {
+        if (resourcePath == null || resourcePath.isEmpty()) {
             return new SimpleEntry<>(ContentClassification.PUBLIC, null);
         }
         

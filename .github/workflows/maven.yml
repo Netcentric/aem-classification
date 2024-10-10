@@ -31,7 +31,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Build Site for Maven Plugin
       if: github.ref != 'refs/heads/master'
-      run: mvn -B clean site --file aem-classification-maven-plugin/pom.xml
+      run: ./mvnw -B clean site --file aem-classification-maven-plugin/pom.xml
     - name:  Build, Analyse and Deploy Reactor with Maven
       if: github.ref == 'refs/heads/master'
       run: ./mvnw -B clean deploy org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Netcentric_aem-classification -Dsonar.organization=netcentric -Dsonar.host.url=https://sonarcloud.io -Pcoverage-report
@@ -51,6 +51,7 @@ jobs:
       with:
         path: aem-classification-maven-plugin/target/site/
   deploy:
+    if: github.ref == 'refs/heads/master'
      # Add a dependency to the build job
     needs: build
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
