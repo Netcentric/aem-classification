@@ -21,10 +21,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 
-import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.output.CloseShieldOutputStream;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,8 +33,6 @@ import biz.netcentric.filevault.validator.aem.classification.MutableContentClass
  * A mutable {@link ContentClassificationMapImpl} which supports serialization.
  */
 public class MutableContentClassificationMapImpl extends ContentClassificationMapImpl implements MutableContentClassificationMap {
-
-    private static final CSVFormat CSV_FORMAT = CSVFormat.RFC4180.withCommentMarker('#');
 
     public MutableContentClassificationMapImpl(@NotNull String label) {
         super(label);
@@ -56,7 +52,7 @@ public class MutableContentClassificationMapImpl extends ContentClassificationMa
                 values.add(entry.getKey()); // resource type
                 values.add(entry.getValue().toString());
                 String remark = remarkMap.get(entry.getKey());
-                if (StringUtils.isNotEmpty(remark)) {
+                if (remark != null && !remark.isEmpty()) {
                     values.add(remark);
                 }
                 csvPrinter.printRecord(values);
