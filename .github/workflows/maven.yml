@@ -23,7 +23,7 @@ jobs:
         git config --global user.name "GitHub Action"
     - name: Build and Analyse Reactor with Maven
       if: github.ref != 'refs/heads/master'
-      run: mvn -B clean install org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Netcentric_aem-classification -Dsonar.organization=netcentric -Dsonar.host.url=https://sonarcloud.io -Pcoverage-report
+      run: ./mvnw -B clean install org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Netcentric_aem-classification -Dsonar.organization=netcentric -Dsonar.host.url=https://sonarcloud.io -Pcoverage-report
       env:
         # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -34,7 +34,7 @@ jobs:
       run: mvn -B clean site --file aem-classification-maven-plugin/pom.xml
     - name:  Build, Analyse and Deploy Reactor with Maven
       if: github.ref == 'refs/heads/master'
-      run: mvn -B clean deploy org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Netcentric_aem-classification -Dsonar.organization=netcentric -Dsonar.host.url=https://sonarcloud.io -Pcoverage-report
+      run: ./mvnw -B clean deploy org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Netcentric_aem-classification -Dsonar.organization=netcentric -Dsonar.host.url=https://sonarcloud.io -Pcoverage-report
       env: 
         MAVEN_USERNAME: ${{ secrets.OSSRH_TOKEN_USER }}
         MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
@@ -44,7 +44,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Build Site for Maven Plugin
       if: github.ref == 'refs/heads/master'
-      run: mvn -B clean site --file aem-classification-maven-plugin/pom.xml
+      run: ./mvnw -B clean site --file aem-classification-maven-plugin/pom.xml
     - name: Upload Site for Maven Plugin
       if: github.ref == 'refs/heads/master'
       uses: actions/upload-pages-artifact@v3
