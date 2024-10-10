@@ -30,7 +30,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.spi.commons.name.NameFactoryImpl;
 import org.apache.jackrabbit.vault.util.DocViewNode;
 import org.apache.jackrabbit.vault.validation.spi.DocumentViewXmlValidator;
@@ -230,7 +229,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     }
 
     static @NotNull String extendMessageWithRemark(@NotNull String message, String remark) {
-        if (StringUtils.isNotBlank(remark)) {
+        if (remark != null && !remark.isEmpty()) {
             return message + " Remark: " + remark;
         }
         return message;
