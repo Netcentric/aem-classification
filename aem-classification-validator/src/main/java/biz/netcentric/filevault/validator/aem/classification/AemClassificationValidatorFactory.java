@@ -27,7 +27,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.vault.validation.spi.ValidationContext;
 import org.apache.jackrabbit.vault.validation.spi.ValidationMessageSeverity;
 import org.apache.jackrabbit.vault.validation.spi.Validator;
@@ -61,7 +60,7 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
     public Validator createValidator(@NotNull ValidationContext context, @NotNull ValidatorSettings settings) {
         String mapUrls = settings.getOptions().get(OPTION_MAPS);
         // either load map from classpath, from filesystem or from generic url
-        if (StringUtils.isBlank(mapUrls)) {
+        if (mapUrls == null || mapUrls.isEmpty()) {
             throw new IllegalArgumentException("Mandatory option " + OPTION_MAPS + " missing!");
         }
         String optionWhitelistedResourcePaths = null;
@@ -125,7 +124,7 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
     private static Map<ContentClassification, ValidationMessageSeverity> parseSeverityClassification(List<String> severities) {
         Map<ContentClassification, ValidationMessageSeverity> result = severities.stream()
                 .map(severity -> severity.split("="))
-                .filter(arr -> arr.length == 2 && !StringUtils.isEmpty(arr[0]) && !StringUtils.isEmpty(arr[1]))
+                .filter(arr -> arr.length == 2 && !arr[0].isEmpty() && !arr[1].isEmpty())
                 .collect(Collectors.toMap(s -> ContentClassification.valueOf(s[0].trim()),
                         s -> ValidationMessageSeverity.valueOf(s[1].trim())));
 

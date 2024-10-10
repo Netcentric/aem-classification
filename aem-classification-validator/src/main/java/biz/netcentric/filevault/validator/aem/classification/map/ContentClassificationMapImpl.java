@@ -109,7 +109,7 @@ public class ContentClassificationMapImpl implements ContentClassificationMap {
     @NotNull
     public Entry<ContentClassification, String> getContentClassificationAndRemarkForResourcePath(@NotNull String resourcePath, @Nullable Collection<Pattern> whitelistedResourcePaths) {
         // ignore empty resourceTypes
-        if (resourcePath == null || resourcePath.isEmpty()) {
+        if (resourcePath.isEmpty()) {
             return new SimpleEntry<>(ContentClassification.PUBLIC, null);
         }
         

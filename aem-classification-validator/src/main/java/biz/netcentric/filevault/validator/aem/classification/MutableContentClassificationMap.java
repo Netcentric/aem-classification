@@ -28,7 +28,7 @@ public interface MutableContentClassificationMap extends ContentClassificationMa
 
     /**
      * Writes the map to a given output stream.
-     * Leaves the output stream open.
+     * Closes the stream upon completion.
      * 
      * @param outputStream the stream to write to
      * @throws IOException in case of any exception during writing

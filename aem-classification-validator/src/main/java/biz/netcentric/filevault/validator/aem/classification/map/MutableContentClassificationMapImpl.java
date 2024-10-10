@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 
 import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.io.output.CloseShieldOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +44,7 @@ public class MutableContentClassificationMapImpl extends ContentClassificationMa
 
     @Override
     public void write(@NotNull OutputStream output) throws IOException {
-        try (CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(new CloseShieldOutputStream(output), StandardCharsets.US_ASCII), CSV_FORMAT)) {
+        try (CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(output, StandardCharsets.US_ASCII), CSV_FORMAT)) {
             csvPrinter.printComment(getLabel());
             for (Entry<String, ContentClassification> entry : classificationMap.entrySet()) {
                 Collection<String> values = new LinkedList<>();
