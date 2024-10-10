@@ -13,8 +13,6 @@ package biz.netcentric.filevault.validator.aem.classification.mojo;
  * #L%
  */
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -52,13 +50,12 @@ import biz.netcentric.filevault.validator.aem.classification.MutableContentClass
 import biz.netcentric.filevault.validator.aem.classification.map.MutableContentClassificationMapImpl;
 
 /**
- *  Downloads the classification data from a remote JCR repository (only works with AEM 6.4 or newer),
+ *  Downloads the classification data from a remote JCR (only works with AEM 6.4 or newer) via HTTP endpoints,
  *  serializes it into a map file and optionally wraps that within a JAR file.
  *  <p>
- *  That JAR file still needs to be manually uploaded to a Maven repository to leverage this classification map from the plugin.
+ *  That JAR file still needs to be manually uploaded to a Maven repository to leverage this classification map from the aem-classification-validator.
  *  <p>
- *  Uses the JCR search to find the current classification and also deprecation infos from properties "cq:deprecated" and "cq:deprecatedReason"
- *  The search index needs to be setup for that though (property index limited to properties jcr:primaryType and jcr:mixinTypes for node types granite:FinalArea, granite:PublicArea, granite:InternalArea, granite:AbstractArea and another property index for properties cq:deprecated for any node type)
+ *  Uses the JCR search to find the current classification and also deprecation infos from properties {@code cq:deprecated} and {@code cq:deprecatedReason}.
  */
 @Mojo(requiresProject=false, name = "download-content-classification")
 public class DownloadContentClassificationMojo extends AbstractMojo {
@@ -86,7 +83,11 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
      * needs to be set to the filepath the map should have within the JAR.
      */
     @Parameter(property="relativeFileNameInJar", required = false)
-    File relativeFileNameInJar;
+    Path relativeFileNameInJar;
+
+    /** The path of the classification map file (and potentially wrapper jar) without extension. If not set it is written to the default temporary directory of the file system with a random file name. */
+    @Parameter(property="outputFile", required = false)
+    Path outputFile;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -113,15 +114,20 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
             retrieveDeprecatedResourceTypes(httpClient, map);
             
             // 3. persist the map
-            Path outputFile = Files.createTempFile("contentclassification", ".map");
-            try (OutputStream fileOutputStream = Files.newOutputStream(outputFile)) {
+            final Path classificationMapFile;
+            if (outputFile == null) {
+                classificationMapFile = Files.createTempFile("contentclassification", ".map");
+            } else {
+                classificationMapFile = outputFile.resolveSibling(outputFile.getFileName() + ".map");
+            }
+            try (OutputStream fileOutputStream = Files.newOutputStream(classificationMapFile)) {
                 map.write(fileOutputStream);
             }
-            log.info("Written classification map to " + outputFile + " containing " + map.size() + " entries.");
+            log.info("Written classification map to " + classificationMapFile + " containing " + map.size() + " entries.");
             
             // 4. optionally wrap in a JAR
             if (relativeFileNameInJar != null) {
-                File jarFile = createJarWrapper(outputFile, relativeFileNameInJar.toPath());
+                Path jarFile = createJarWrapper(classificationMapFile, relativeFileNameInJar);
                 log.info("Written wrapper jar to " + jarFile);
             }
         } catch (InterruptedException e) {
@@ -232,11 +238,17 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
         return response.body();
     }
 
-    File createJarWrapper(Path sourceFile, Path relativeFileNameInJar) throws IOException {
+    Path createJarWrapper(Path sourceFile, Path relativeFileNameInJar) throws IOException {
         Manifest manifest = new Manifest();
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
-        File outputFile = File.createTempFile("contentclassification", ".jar");
-        try (JarOutputStream target = new JarOutputStream(new FileOutputStream(outputFile), manifest)) {
+        final Path jarFile;
+        if (outputFile == null) {
+            jarFile = Files.createTempFile("contentclassification", ".jar");
+        } else {
+            jarFile = outputFile.resolveSibling(outputFile.getFileName() + ".jar");
+        }
+        
+        try (JarOutputStream target = new JarOutputStream(Files.newOutputStream(jarFile), manifest)) {
             JarEntry entry = new JarEntry(getPathWithUnixSeparators(relativeFileNameInJar));
             entry.setTime(Files.getLastModifiedTime(sourceFile).toMillis());
             target.putNextEntry(entry);
@@ -245,7 +257,7 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
             }
             target.closeEntry();
         }
-        return outputFile;
+        return jarFile;
     }
 
     static String getPathWithUnixSeparators(Path path) {
