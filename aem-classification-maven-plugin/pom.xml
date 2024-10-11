@@ -1,14 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>aem-classification-maven-plugin</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
     <name>AEM Classification Maven Plugin</name>
     <description>Maven plugin to generate classification maps from existing AEM instances (https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/sustainable-upgrades.html).</description>
     <packaging>maven-plugin</packaging>
     <parent>
         <groupId>biz.netcentric.filevault.validator</groupId>
         <artifactId>aem-classification</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
     </parent>
 
     <url>https://netcentric.github.io/aem-classification/</url>
