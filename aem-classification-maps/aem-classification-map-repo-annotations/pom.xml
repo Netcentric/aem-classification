@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>biz.netcentric.filevault.validator.maps</groupId>
     <artifactId>aem-classification-map-repo-annotations</artifactId>
-    <version>2025.11.23482-SNAPSHOT</version>
+    <version>6.6.1.0-SNAPSHOT</version>
     <name>AEM Classification Map from Repository Annotations</name>
     <description>Classification Maps to be used with the validator</description>
 
