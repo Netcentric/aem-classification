@@ -40,7 +40,7 @@ jobs:
       run: ./mvnw -B clean site --file aem-classification-maven-plugin/pom.xml
     - name:  Build, Analyse and Deploy Reactor with Maven
       if: github.ref == 'refs/heads/master'
-      run: ./mvnw -B clean deploy org.sonarsource.scanner.maven:sonar-maven-plugin:5.2.0.4988:sonar -Dsonar.projectKey=Netcentric_aem-classification -Dsonar.organization=netcentric -Dsonar.host.url=https://sonarcloud.io -Dsonar.scanner.skipJreProvisioning=true -Pcoverage-report -DaltDeploymentRepository=id::njord:snapshot
+      run: ./mvnw -B clean deploy org.sonarsource.scanner.maven:sonar-maven-plugin:5.2.0.4988:sonar -Dsonar.projectKey=Netcentric_aem-classification -Dsonar.organization=netcentric -Dsonar.host.url=https://sonarcloud.io -Dsonar.scanner.skipJreProvisioning=true -Pcoverage-report
       env: 
         MAVEN_USERNAME: ${{ secrets.SONATYPE_CENTRAL_TOKEN_USER }}
         MAVEN_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_TOKEN_PASSWORD }}
