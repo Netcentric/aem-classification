@@ -42,20 +42,23 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>sonatype-central-portal</id>
+            <name>AEM Classification Snapshots</name>
+            <url>https://central.sonatype.com/repository/maven-snapshots</url>
         </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>sonatype-central-portal</id>
+            <name>AEM Classification Releases</name>
+            <url>https://repo.maven.apache.org/maven2</url>
         </repository>
     </distributionManagement>
 
     <properties>
-        <maven.version>3.3.9</maven.version>
+        <maven.version>3.9</maven.version>
         <maven.compiler.release>8</maven.compiler.release> <!-- used for compiler and javadoc plugin -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.9.0</junit.jupiter.version>
+        <njord.version>0.8.3</njord.version>
     </properties>
 
     <dependencyManagement>
@@ -76,8 +79,20 @@
     </dependencyManagement>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>eu.maveniverse.maven.njord</groupId>
+                <artifactId>extension3</artifactId>
+                <version>${njord.version}</version>
+            </extension>
+        </extensions>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>eu.maveniverse.maven.plugins</groupId>
+                    <artifactId>njord</artifactId>
+                    <version>${njord.version}</version>
+                </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.5.1</version>
@@ -254,18 +269,6 @@
                     <scmReleaseCommitComment>@{prefix} prepare release @{releaseLabel} [skip ci]</scmReleaseCommitComment>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <!-- manually release in https://oss.sonatype.org/#stagingRepositories after the Maven release build -->
-                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
