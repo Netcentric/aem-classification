@@ -1,4 +1,4 @@
-# AEM 2024.10.18099.20241003T125241Z
+# AEM 2025.11.23482.20251120T200914Z
 /,PUBLIC
 /libs/clientlibs/ckeditor,INTERNAL
 /libs/clientlibs/granite,INTERNAL
@@ -391,6 +391,8 @@
 /libs/dam/gui/components/admin/publiclinkshare/view,INTERNAL
 /libs/dam/gui/components/admin/publiclinkshare/view/bootstrap,INTERNAL
 /libs/dam/gui/components/admin/references/launchcopy,INTERNAL
+/libs/dam/gui/components/admin/smarttagenhancement,INTERNAL
+/libs/dam/gui/components/admin/smarttagenhancement/config,INTERNAL
 /libs/dam/gui/components/s7dam,INTERNAL
 /libs/dam/gui/components/s7dam/batchsetpresets/pathfield,FINAL
 /libs/dam/gui/content/adhocassetsharepage,INTERNAL
@@ -445,6 +447,8 @@
 /libs/dam/gui/coral/components/admin/adhocassetshare/linkexpired,INTERNAL
 /libs/dam/gui/coral/components/admin/adhocassetshare/myshares,INTERNAL
 /libs/dam/gui/coral/components/admin/adhocassetshare/userpicker,INTERNAL
+/libs/dam/gui/coral/components/admin/aimetadata,PUBLIC
+/libs/dam/gui/coral/components/admin/aimetadata/aimetadatarendercondition,PUBLIC
 /libs/dam/gui/coral/components/admin/annotation,PUBLIC
 /libs/dam/gui/coral/components/admin/annotation/clientlibs,INTERNAL
 /libs/dam/gui/coral/components/admin/annotation/comment,FINAL
