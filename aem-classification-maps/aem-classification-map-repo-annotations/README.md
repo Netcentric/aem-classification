@@ -34,4 +34,4 @@ Path | Wrong Classification | Usage Examples | Wrong in version |  Reported (and
 
 [1]: https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/sustainable-upgrades.html#content-classifications
 [2]: ../../aem-classification-maven-plugin/README.md
-[3]: https://search.maven.org/search?q=g:biz.netcentric.filevault.validator.maps%20AND%20a:aem-classification-map-repo-annotations
+[3]: https://central.sonatype.com/artifact/biz.netcentric.filevault.validator.maps/aem-classification-map-repo-annotations/versions
