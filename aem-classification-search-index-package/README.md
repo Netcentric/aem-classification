@@ -6,5 +6,5 @@ The latest package can be downloaded from [Maven Central][3] and installed via t
 
 [1]: ../aem-classification-maven-plugin
 [2]: https://jackrabbit.apache.org/oak/docs/query/indexing.html
-[3]: https://search.maven.org/search?q=g:biz.netcentric.filevault.validator%20AND%20a:aem-classification-search-index-package
+[3]: https://central.sonatype.com/artifact/biz.netcentric.filevault.validator/aem-classification-search-index-package
 [4]: https://docs.adobe.com/content/help/en/experience-manager-65/administering/contentmanagement/package-manager.html#PackageManager
