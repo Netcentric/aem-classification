@@ -72,8 +72,12 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
             optionWhitelistedResourcePaths = settings.getOptions().get(OPTION_WHITELISTED_RESOURCE_PATH_PATTERNS);
         }
 
-        Collection<String> whitelistedResourcePaths = 
-                Optional.ofNullable(optionWhitelistedResourcePaths).map(op -> Arrays.asList(op.split(","))).orElse(Collections.emptyList());
+        Collection<String> whitelistedResourcePaths =
+                Optional.ofNullable(optionWhitelistedResourcePaths)
+                        .map(op -> Arrays.stream(op.split(","))
+                                .map(String::trim)
+                                .collect(Collectors.toList()))
+                        .orElse(Collections.emptyList());
 
         try {
             whitelistedResourcePaths.stream().forEach(AemClassificationValidatorFactory::validateResourcePathPattern);
@@ -116,7 +120,7 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
     static Map<ContentClassification, ValidationMessageSeverity> getSeverityPerClassification(@Nullable String option) {
         final Map<ContentClassification, ValidationMessageSeverity> severitiesPerClassification;
         return Optional.ofNullable(option)
-                .map(op -> Arrays.asList(op.split(",")))
+                .map(op -> Arrays.stream(op.split(",")).map(String::trim).collect(Collectors.toList()))
                 .map(AemClassificationValidatorFactory::parseSeverityClassification)
                 .orElse(Collections.emptyMap());
     }
