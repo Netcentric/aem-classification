@@ -23,14 +23,22 @@ URL| Description
 --- | ---
 `tccl:biz/netcentric/filevault/validator/maps/aem-classification-map-repo-annotations.map` | Contains all classifications and in addition also deprecations from the repository of AEM.
 
+## Included Add-Ons
+
+Since `2025.11.23482` there is also annotations included from the following add-ons in the most recent version (at the time of creation).
+
+1. [Forms](https://experienceleague.adobe.com/en/docs/experience-manager-cloud-service/content/forms/setup-configure-migrate/setup-local-development-environment#add-forms-archive)
+2. [CIF](https://experienceleague.adobe.com/en/docs/experience-manager-cloud-service/content/content-and-commerce/cif-storefront/storefront/developing/develop#accessing-add-on)
+
 # Known incorrect classifications
 
 All known incorrect classifications in the repo are listed in the table below. Please report others via [Issues](https://github.com/Netcentric/aem-classification/issues).
 
 Path | Wrong Classification | Usage Examples | Wrong in version |  Reported (and tracked in)
 --- | --- | --- | --- | ---
-`/libs/cq/workflow/components/pages/model` | `granite:InternalArea` | Workflow Models | 6.5.3, 6.5.13, 2020.3.2483, 2021.6.5586, 2022.7.8085, 2024.10.18099, 2025.11.23482 | https://daycare.day.com/content/home/netcentric/netcentric_de/aemasacloudservice/208727.html (CQ-4291242) 
-`/libs/cq/dtm-reactor/components/conf/page` | `granite:InternalArea` (via parent) | Launch Cloud Configurations use that artificial resource type | 6.5.3, 6.5.13, 2020.3.2483, 2021.6.5586, 2022.7.8085, 2024.10.18099, 2025.11.234821 | -
+`/libs/cq/workflow/components/pages/model` | `granite:InternalArea` | Workflow Models | 6.5.x, All AEMaaCS versions | https://daycare.day.com/content/home/netcentric/netcentric_de/aemasacloudservice/208727.html (CQ-4291242) 
+`/libs/cq/dtm-reactor/components/conf/page` | `granite:InternalArea` (via parent) | Launch Cloud Configurations use that artificial resource type | 6.5.x, All AEMaaCS versions | -
+`/libs/fd/af/authoring/components/granite` | `granite:InternalArea` | Forms Datasources or Components | 6.5.x, All AEMaaCS versions | [AEM Core Forms Components, Issue 1775](https://github.com/adobe/aem-core-forms-components/issues/1775)
 
 [1]: https://docs.adobe.com/content/help/en/experience-manager-65/deploying/upgrading/sustainable-upgrades.html#content-classifications
 [2]: ../../aem-classification-maven-plugin/README.md
