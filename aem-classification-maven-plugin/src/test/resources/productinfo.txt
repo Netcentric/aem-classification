@@ -1,0 +1,10 @@
+*** Product Information:
+License
+  Customer: Customer A
+  Download ID: xxxxxxxxxxx
+  Product : Some Product
+
+Installed Products
+  Adobe Experience Manager (2025.11.23482.20251120T200914Z)
+  cif (2025.10.15.00)
+  forms (2025.10.17.02)

@@ -13,8 +13,11 @@ package biz.netcentric.filevault.validator.aem.classification.mojo;
  * #L%
  */
 
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -25,8 +28,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.Attributes;
@@ -94,12 +99,12 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
         Log log = getLog();
         HttpClient httpClient = HttpClient.newHttpClient();
         try {
-            String aemVersion = getAemVersion(httpClient);
+            Collection<String> products = getProducts(httpClient);
             
             log.warn("Make sure that the relevant search index definitions are deployed on AEM at " + baseUrl + ". Otherwise this goal will fail!");
             log.info("Start retrieving the classification and deprecation data from " + baseUrl);
             
-            MutableContentClassificationMap map = new MutableContentClassificationMapImpl("AEM " + aemVersion);
+            MutableContentClassificationMap map = new MutableContentClassificationMapImpl(products.stream().collect(Collectors.joining(", ")));
             // always make sure that the root node is PUBLIC (even though this might not be part of the classification map extracted from a repo)
             map.put("/", ContentClassification.PUBLIC, null);
             // 1. retrieve classifications from mixins and store in map
@@ -138,19 +143,30 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
         }
     }
 
-    String getAemVersion(HttpClient httpClient) throws IOException, InterruptedException {
-        try (InputStream input = downloadFromAem(httpClient, "/libs/granite/operations/content/systemoverview/export.json")) {
-            JSONParser parser = new JSONParser(input);
-            Map<String, Object> response = parser.getParsed();
-            getLog().debug("Received JSON response " + response);
-            
-            Object results = response.get("Instance");
-            if (!(results instanceof Map<?, ?>)) {
-                throw new IllegalStateException("JSON response did not have an array of results");
+    Collection<String> getProducts(HttpClient httpClient) throws IOException, InterruptedException {
+        // http://localhost:4502/system/console/status-productinfo does not provide proper JSON, therefore parse TXT
+        try (InputStream input = downloadFromAem(httpClient, "/system/console/status-productinfo.txt")) {
+            return extractProductsFromProductInfo(input);
+        }
+    }
+
+    static Collection<String> extractProductsFromProductInfo(InputStream input) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
+            String line;
+            Collection<String> products = new LinkedList<>();
+            boolean isRelevantLine = false;
+            while ((line = reader.readLine()) != null) {
+                if (line.equals("Installed Products")) {
+                    // the rest is relevant
+                    isRelevantLine = true;
+                } else if(isRelevantLine){
+                    String product = line.trim();
+                    if (!product.isEmpty()) {
+                        products.add(product);
+                    }
+                }
             }
-            @SuppressWarnings("unchecked")
-            Map<String, Object> subResult = (Map<String, Object>)results;
-            return (String) subResult.get("Adobe Experience Manager");
+            return products;
         }
     }
 
