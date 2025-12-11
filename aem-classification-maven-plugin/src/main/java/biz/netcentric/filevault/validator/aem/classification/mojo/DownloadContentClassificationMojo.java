@@ -251,6 +251,9 @@ public class DownloadContentClassificationMojo extends AbstractMojo {
                 .build();
         getLog().debug("Connecting to " + uri + "...");
         HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
+        if (response.statusCode() != 200) {
+            throw new IOException("Could not download from " + uri + ", server returned status code " + response.statusCode());
+        }
         return response.body();
     }
 
