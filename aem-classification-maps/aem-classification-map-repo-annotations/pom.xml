@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>biz.netcentric.filevault.validator.maps</groupId>
     <artifactId>aem-classification-map-repo-annotations</artifactId>
-    <version>6.6.1.0-SNAPSHOT</version>
+    <version>6.6.1.0</version>
     <name>AEM Classification Map from Repository Annotations</name>
     <description>Classification Maps to be used with the validator</description>
 
@@ -17,7 +17,8 @@
         <connection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</developerConnection>
         <url>https://github.com/Netcentric/aem-classification/tree/${project.scm.tag}/aem-classification-maps/aem-classification-map-repo-annotations</url>
-    </scm>
+      <tag>aem-classification-map-repo-annotations-6.6.1.0</tag>
+  </scm>
 
     <build>
         <plugins>
