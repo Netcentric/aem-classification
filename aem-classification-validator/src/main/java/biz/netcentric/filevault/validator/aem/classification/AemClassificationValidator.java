@@ -41,8 +41,12 @@ import org.apache.sling.api.SlingConstants;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AemClassificationValidator implements DocumentViewXmlValidator, GenericJcrDataValidator, NodePathValidator {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AemClassificationValidator.class);
 
     /**
      * Example HTL code which should be matched by the RegEx:
@@ -51,11 +55,11 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
      * <br>
      * The first subgroup must contain the value of the resource type.
      * This pattern only works if the resource type is given as literal!
-     * 
+     *
      * @see <a href="https://helpx.adobe.com/experience-manager/htl/using/block-statements.html#resource">data-sly-resource</a>
      */
     static final Pattern HTL_INCLUDE_OVERWRITING_RESOURCE_TYPE = Pattern.compile("data-sly-resource\\s*=[^@]*.*?resourceType\\s*=\\s*(?:\"|\')([^'\"]*)(?:\"|\')");
-    
+
     /**
      * Example JSP code which should be matched by the RegEx:
      * <br>
@@ -64,7 +68,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
      * <br>
      * The first subgroup must contain the value of the resource type.
      * This pattern only works if the resource type is given as literal!
-     * 
+     *
      * @see <a href="https://experienceleague.adobe.com/docs/experience-manager-65/developing/platform/taglib.html?lang=en">CQ/Sling Tag Library</a>
      */
     private static final Pattern JSP_INCLUDE_OVERWRITING_RESOURCE_TYPE = Pattern.compile("(?:<cq:|<sling:)include resourceType\\s*=\\s*(?:\"|\')([^'\"]*)(?:\"|\')");
@@ -84,18 +88,22 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
 
     private final ContentClassificationMap classificationMap;
     private final Collection<String> whitelistedResourcePaths;
+    private final Collection<String> ignoreViolationsInPropertiesMatchingPaths;
     private final Collection<Pattern> whitelistedResourcePathPatterns;
+    private final Collection<Pattern> ignoreViolationsInPropertiesMatchingPathPatterns;
     private final Map<ContentClassification, ValidationMessageSeverity> severityPerClassification;
 
     private @NotNull ValidationMessageSeverity defaultSeverity;
     private final Collection<String> overlaidNodePaths;
 
-    public AemClassificationValidator(@NotNull ValidationMessageSeverity defaultSeverity, @NotNull ContentClassificationMap classificationMap, @NotNull Collection<String> whitelistedResourcePaths, @NotNull Map<ContentClassification, ValidationMessageSeverity> severityPerClassification) {
+    public AemClassificationValidator(@NotNull ValidationMessageSeverity defaultSeverity, @NotNull ContentClassificationMap classificationMap, @NotNull Collection<String> whitelistedResourcePaths, @NotNull Collection<String> ignoreViolationsInPropertiesMatchingPaths, @NotNull Map<ContentClassification, ValidationMessageSeverity> severityPerClassification) {
         super();
         this.defaultSeverity = defaultSeverity;
         this.classificationMap = classificationMap;
         this.whitelistedResourcePaths = whitelistedResourcePaths;
         this.whitelistedResourcePathPatterns = whitelistedResourcePaths.stream().map(Pattern::compile).collect(Collectors.toList());
+        this.ignoreViolationsInPropertiesMatchingPaths = ignoreViolationsInPropertiesMatchingPaths;
+        this.ignoreViolationsInPropertiesMatchingPathPatterns = ignoreViolationsInPropertiesMatchingPaths.stream().map(Pattern::compile).collect(Collectors.toList());
         this.severityPerClassification = severityPerClassification;
         this.overlaidNodePaths = new LinkedList<>();
     }
@@ -106,6 +114,11 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
 
     @Override
     public Collection<ValidationMessage> validate(@NotNull String path) {
+        if (isIgnoredViolationBasedOnPathPattern(path, ignoreViolationsInPropertiesMatchingPathPatterns)) {
+            LOGGER.debug("Path '{}' is explicitly whitelisted even if it contains violations and therefore has no restrictions!", path);
+            return null;
+        }
+
         if (!overlaidNodePaths.contains(path)) {
             // check overlay usage in addition for non-docview files
             ValidationMessage message = validateClassification(path,  ContentUsage.OVERLAY, MESSAGE_SUBJECT_FILE);
@@ -118,6 +131,10 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
 
     @Override
     public boolean shouldValidateJcrData(@NotNull Path filePath) {
+        if (isIgnoredViolationBasedOnPathPattern(filePath.toString(), ignoreViolationsInPropertiesMatchingPathPatterns)) {
+            LOGGER.debug("Path '{}' is explicitly whitelisted even if it contains violations and therefore has no restrictions!", filePath);
+            return false;
+        }
         return (isHtlFile(filePath) || isJspFile(filePath));
     }
 
@@ -167,6 +184,11 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
 
     @Override
     public Collection<ValidationMessage> validate(@NotNull DocViewNode node, @NotNull String nodePath, @NotNull Path filePath, boolean isRoot) {
+        if (isIgnoredViolationBasedOnPathPattern(nodePath, ignoreViolationsInPropertiesMatchingPathPatterns)) {
+            LOGGER.debug("Path '{}' is explicitly whitelisted even if it contains violations and therefore has no restrictions!", nodePath);
+            return null;
+        }
+
         Collection<ValidationMessage> messages = new LinkedList<>();
         String subject = String.format(MESSAGE_SUBJECT_NODE, jcrExpandedFormNameToReadableFormat(node.label));
 
@@ -190,7 +212,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
            messages.add(message);
            overlaidNodePaths.add(nodePath);
         }
-        
+
         // TODO: check usage of clientlib dependencies/embeds
         return messages;
     }
@@ -204,7 +226,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
             // add subject and usage to message
             return new ValidationMessage(defaultSeverity, "Resource path must not end with '/' but is '" + resourcePath + "'");
         }
-        
+
         if (usage == ContentUsage.OVERLAY) {
             if (!resourcePath.startsWith("/apps/")) {
                 return null; // this is not an overlay at all, therefore no violation
@@ -228,19 +250,26 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
         return JSP_PATH_MATCHER.matches(file);
     }
 
+    private static boolean isIgnoredViolationBasedOnPathPattern(@NotNull String path, @Nullable Collection<Pattern> ignoreViolationsInPropertiesMatchingPathPatterns) {
+        if (ignoreViolationsInPropertiesMatchingPathPatterns == null) {
+            return false;
+        }
+        return ignoreViolationsInPropertiesMatchingPathPatterns.stream().anyMatch(r -> r.matcher(path).matches());
+    }
+
     static @NotNull String extendMessageWithRemark(@NotNull String message, String remark) {
         if (remark != null && !remark.isEmpty()) {
             return message + " Remark: " + remark;
         }
         return message;
     }
-    
+
     @NotNull ValidationMessageSeverity getSeverityForClassification(ContentClassification classification) {
         ValidationMessageSeverity severity = severityPerClassification.get(classification);
         return severity != null ? severity : defaultSeverity;
     }
 
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -248,6 +277,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
         result = prime * result + ((classificationMap == null) ? 0 : classificationMap.hashCode());
         result = prime * result + ((defaultSeverity == null) ? 0 : defaultSeverity.hashCode());
         result = prime * result + ((whitelistedResourcePaths == null) ? 0 : whitelistedResourcePaths.hashCode());
+        result = prime * result + ((ignoreViolationsInPropertiesMatchingPaths == null) ? 0 : ignoreViolationsInPropertiesMatchingPaths.hashCode());
         result = prime * result + ((severityPerClassification == null) ? 0 : severityPerClassification.hashCode());
         return result;
     }
@@ -273,6 +303,11 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
                 return false;
         } else if (!whitelistedResourcePaths.equals(other.whitelistedResourcePaths))
             return false;
+        if (ignoreViolationsInPropertiesMatchingPaths == null) {
+            if (other.ignoreViolationsInPropertiesMatchingPaths != null)
+                return false;
+        } else if (!ignoreViolationsInPropertiesMatchingPaths.equals(other.ignoreViolationsInPropertiesMatchingPaths))
+            return false;
         if (severityPerClassification == null) {
             if (other.severityPerClassification != null)
                 return false;
@@ -285,6 +320,7 @@ public class AemClassificationValidator implements DocumentViewXmlValidator, Gen
     public String toString() {
         return "AemClassificationValidator [" + (classificationMap != null ? "classificationMap=" + classificationMap + ", " : "")
                 + (whitelistedResourcePaths != null ? "resourceTypeWhitelist=" + whitelistedResourcePaths + ", " : "")
+                + (ignoreViolationsInPropertiesMatchingPaths != null ? "ignoreViolationsInPropertiesMatchingPaths=" + ignoreViolationsInPropertiesMatchingPaths + ", " : "")
                 + (severityPerClassification != null ? "severityPerClassification=" + severityPerClassification + ", " : "")
                 + (defaultSeverity != null ? "defaultSeverity=" + defaultSeverity : "") + "]";
     }

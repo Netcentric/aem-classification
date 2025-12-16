@@ -24,11 +24,7 @@ import java.net.URISyntaxException;
 import java.nio.file.FileSystemException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -59,6 +55,7 @@ class AemClassificationValidatorTest {
     private static final Path SIMPLEFILE_JSP_PATH = Paths.get("/apps/example.jsp");
     private static final Path OVERLAY_DOCVIEW_PATH = Paths.get("/apps/.content.xml");
     private static final Path EXAMPLE_DOCVIEW_PATH = Paths.get("/apps/example/.content.xml");
+    private static final Path EXAMPLE_WHITELISTED_DOCVIEW_PATH = Paths.get("/apps/example/whitelisted/.content.xml");
 
     @BeforeEach
     void setUp() {
@@ -68,7 +65,11 @@ class AemClassificationValidatorTest {
         classificationMap.put("/libs/internal", ContentClassification.INTERNAL, "internalremark");
         classificationMap.put("/libs/public", ContentClassification.PUBLIC, "publicremark");
         classificationMap.put("/", ContentClassification.PUBLIC, "");
-        validator = new AemClassificationValidator(ValidationMessageSeverity.ERROR, classificationMap, Collections.emptyList(), Collections.emptyMap());
+        Collection<String> ignoreViolationsInPropertiesMatchingPathPatterns = new ArrayList<>();
+        ignoreViolationsInPropertiesMatchingPathPatterns.add("/apps/mytest/component/whitelisted/whitelisted.jsp");
+        ignoreViolationsInPropertiesMatchingPathPatterns.add("/apps/internal/whitelisted");
+        ignoreViolationsInPropertiesMatchingPathPatterns.add("/apps/example/whitelisted");
+        validator = new AemClassificationValidator(ValidationMessageSeverity.ERROR, classificationMap, Collections.emptyList(), ignoreViolationsInPropertiesMatchingPathPatterns, Collections.emptyMap());
     }
 
     @Test
@@ -85,7 +86,7 @@ class AemClassificationValidatorTest {
         matcher = AemClassificationValidator.HTL_INCLUDE_OVERWRITING_RESOURCE_TYPE.matcher("<article data-sly-resource=\"${ @ path='path/to/resource',removeSelectors, resourceType= 'resourceType', someOtherOption}\">");
         assertTrue(matcher.find());
         assertEquals("resourceType", matcher.group(1));
-        
+
         // use double quotes in expression string literals
         matcher = AemClassificationValidator.HTL_INCLUDE_OVERWRITING_RESOURCE_TYPE.matcher("<article data-sly-resource=\'${\"resource\" @ resourceType=\"resourceType\"}'>");
         assertTrue(matcher.find());
@@ -96,7 +97,7 @@ class AemClassificationValidatorTest {
         matcher = AemClassificationValidator.HTL_INCLUDE_OVERWRITING_RESOURCE_TYPE.matcher("<article data-sly-resource=\'${ @ path=\"path/to/resource\",removeSelectors, resourceType= \"resourceType\", someOtherOption}\'>");
         assertTrue(matcher.find());
         assertEquals("resourceType", matcher.group(1));
-        
+
         // use attributes without quotes
         matcher = AemClassificationValidator.HTL_INCLUDE_OVERWRITING_RESOURCE_TYPE.matcher("<article data-sly-resource=${\'resource\'@resourceType=\'resourceType\'}>");
         assertTrue(matcher.find());
@@ -132,9 +133,15 @@ class AemClassificationValidatorTest {
     }
 
     @Test
+    void testWhitelistedDocviewXml()
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, FileSystemException {
+        assertEquals(0, validateJcrDocView(validator, "myId", "/invalid-resource-type.xml", EXAMPLE_WHITELISTED_DOCVIEW_PATH).size());
+    }
+
+    @Test
     void testInheritingViolationsInDocviewXml()
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, FileSystemException {
-        
+
         ContentUsage usage = ContentUsage.INHERIT;
         assertJcrDocViewValidationMessages(validator, EXAMPLE_DOCVIEW_PATH, "/inheriting.xml",
                 //new ClassificationViolation("/apps/example/test1", 4, 82,  usage, "/libs/abstract", ContentClassification.ABSTRACT, "abstractremark"),
@@ -171,6 +178,7 @@ class AemClassificationValidatorTest {
         assertEquals(Collections.singleton(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.OVERLAY, "/libs/final/test21", ContentClassification.INTERNAL_CHILD, "finalremark")), validator.validate("/apps/final/test21"));
         assertEquals(Collections.singleton(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.OVERLAY, "/libs/internal", ContentClassification.INTERNAL, "internalremark")), validator.validate("/apps/internal"));
         assertEquals(Collections.singleton(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.OVERLAY, "/libs/internal/test21",ContentClassification.INTERNAL,  "internalremark")), validator.validate("/apps/internal/test21"));
+        assertNull(validator.validate("/apps/internal/whitelisted"));
         assertNull(validator.validate("/apps/public"));
         assertNull(validator.validate("/apps/public/test41"));
     }
@@ -181,6 +189,7 @@ class AemClassificationValidatorTest {
         assertTrue(validator.shouldValidateJcrData(Paths.get("/apps/mytest/component/componentA/componentA.html")));
         assertTrue(validator.shouldValidateJcrData(Paths.get("/apps/mytest/component/componentA/componentA.jsp")));
         assertFalse(validator.shouldValidateJcrData(Paths.get("/apps/mytest/component/componentA/componentA.js")));
+        assertFalse(validator.shouldValidateJcrData(Paths.get("/apps/mytest/component/whitelisted/whitelisted.jsp")));
 
         // check HTL which references protected resource type
         try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("htl-example.html")) {
@@ -188,7 +197,7 @@ class AemClassificationValidatorTest {
             // and check violations
             assertEquals(Collections.singletonList(getSimpleFileViolationMessage(ValidationMessageSeverity.ERROR, ContentUsage.REFERENCE, "/libs/abstract/test",  ContentClassification.ABSTRACT, "abstractremark")), messages);
         }
-        
+
         // check JSP which references protected resource type
         try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("example.jsp")) {
             Collection<ValidationMessage> messages = validator.validateJcrData(input, SIMPLEFILE_JSP_PATH, new HashMap<String, Integer>());
@@ -210,7 +219,7 @@ class AemClassificationValidatorTest {
         private final int line;
         private final int column;
         private final ContentUsage usage;
-        private final String targetResourceType; 
+        private final String targetResourceType;
         private final ContentClassification classification;
         private final String remark;
 
@@ -230,11 +239,11 @@ class AemClassificationValidatorTest {
 
     static void assertJcrDocViewValidationMessages(AemClassificationValidator validator, Path path, String name, ClassificationViolation... violations) throws IOException, ParserConfigurationException, SAXException {
         Collection<ValidationMessage> actualMessages = validateJcrDocView(validator, "myid", name, path);
-        Collection<ValidationViolation> expectedMessages = Arrays.stream(violations).map(a -> 
-            ValidationViolation.wrapMessage("myid", 
+        Collection<ValidationViolation> expectedMessages = Arrays.stream(violations).map(a ->
+            ValidationViolation.wrapMessage("myid",
                     getDocviewViolationMessage(ValidationMessageSeverity.ERROR, a.name, a.usage, a.targetResourceType, a.classification, a.remark),
                     path, Paths.get(""), a.nodePath, a.line, a.column)).collect(Collectors.toList());
-        
+
         assertEquals(expectedMessages, actualMessages);
     }
 

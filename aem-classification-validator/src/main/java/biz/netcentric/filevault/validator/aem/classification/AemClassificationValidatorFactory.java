@@ -52,6 +52,9 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
     private static final String OPTION_WHITELISTED_RESOURCE_PATH_PATTERNS = "whitelistedResourcePathPatterns";
     private static final String OPTION_WHITELISTED_RESOURCE_PATH_PATTERNS_OLD = "whitelistedResourcePathsPatterns";
 
+    /** optional list of comma-separated path patterns to ignore violations if properties match inside (should be absolute) */
+    private static final String OPTION_IGNORE_VIOLATIONS_IN_PROPERTIES_MATCHING_PATH_PATTERNS = "ignoreViolationsInPropertiesMatchingPathPatterns";
+
     private static final Object OPTION_SEVERITIES_PER_CLASSIFICATION = "severitiesPerClassification";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AemClassificationValidatorFactory.class);
@@ -72,18 +75,14 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
             optionWhitelistedResourcePaths = settings.getOptions().get(OPTION_WHITELISTED_RESOURCE_PATH_PATTERNS);
         }
 
-        Collection<String> whitelistedResourcePaths =
-                Optional.ofNullable(optionWhitelistedResourcePaths)
-                        .map(op -> Arrays.stream(op.split(","))
-                                .map(String::trim)
-                                .collect(Collectors.toList()))
-                        .orElse(Collections.emptyList());
-
-        try {
-            whitelistedResourcePaths.stream().forEach(AemClassificationValidatorFactory::validateResourcePathPattern);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("At least one value given in option " + OPTION_WHITELISTED_RESOURCE_PATH_PATTERNS + " is invalid", e);
+        String optionIgnoreViolationsInPropertiesMatchingPathPatterns = null;
+        if (settings.getOptions().containsKey(OPTION_IGNORE_VIOLATIONS_IN_PROPERTIES_MATCHING_PATH_PATTERNS)) {
+            optionIgnoreViolationsInPropertiesMatchingPathPatterns = settings.getOptions().get(OPTION_IGNORE_VIOLATIONS_IN_PROPERTIES_MATCHING_PATH_PATTERNS);
         }
+
+        Collection<String> whitelistedResourcePaths = getPathsFromOption(optionWhitelistedResourcePaths);
+        Collection<String> ignoreViolationsInPropertiesMatchingPaths = getPathsFromOption(optionIgnoreViolationsInPropertiesMatchingPathPatterns);
+
         try {
             Collection<ContentClassificationMap> maps = new LinkedList<>();
             for (String mapUrl : mapUrls.split("\\s*,\\s*")) {
@@ -96,7 +95,7 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
                 throw new IllegalArgumentException("At least one valid map must be given!");
             }
             return new AemClassificationValidator(settings.getDefaultSeverity(), new CompositeContentClassificationMap(maps), whitelistedResourcePaths,
-                    getSeverityPerClassification(settings.getOptions().get(OPTION_SEVERITIES_PER_CLASSIFICATION)));
+                    ignoreViolationsInPropertiesMatchingPaths, getSeverityPerClassification(settings.getOptions().get(OPTION_SEVERITIES_PER_CLASSIFICATION)));
         } catch (IOException e) {
             throw new IllegalStateException("Could not read from  " + mapUrls, e);
         }
@@ -138,6 +137,22 @@ public class AemClassificationValidatorFactory implements ValidatorFactory {
                             + "'");
         }
 
+        return result;
+    }
+
+    private static Collection<String> getPathsFromOption(String optionPaths) {
+        Collection<String> result =
+                Optional.ofNullable(optionPaths)
+                        .map(op -> Arrays.stream(op.split(","))
+                                .map(String::trim)
+                                .collect(Collectors.toList()))
+                        .orElse(Collections.emptyList());
+
+        try {
+            result.stream().forEach(AemClassificationValidatorFactory::validateResourcePathPattern);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("At least one value given in option " + OPTION_WHITELISTED_RESOURCE_PATH_PATTERNS + " is invalid", e);
+        }
         return result;
     }
 
