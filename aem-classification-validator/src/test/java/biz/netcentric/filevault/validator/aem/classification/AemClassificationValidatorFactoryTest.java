@@ -14,12 +14,14 @@ package biz.netcentric.filevault.validator.aem.classification;
  */
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.apache.jackrabbit.vault.validation.spi.ValidationContext;
 import org.apache.jackrabbit.vault.validation.spi.ValidationMessageSeverity;
 import org.apache.jackrabbit.vault.validation.spi.ValidatorSettings;
 import org.jetbrains.annotations.NotNull;
@@ -88,6 +90,7 @@ class AemClassificationValidatorFactoryTest {
         options.put("maps", "tccl:valid-classification.map");
         // deprecated option for whitelisting
         options.put("whitelistedResourcePathsPatterns", "/resourceType1/.*,/resourceType2,\n/resourceType3");
+        options.put("ignoreViolationsInPropertiesMatchingPathPatterns", "/apps/mysite/components/reference,\n/apps/mysite/components/old-components/.*");
         options.put("severitiesPerClassification", "INTERNAL=DEBUG,\nINTERNAL_DEPRECATED=INFO");
         ValidatorSettings settings = new ValidatorSettingsImpl(false, ValidationMessageSeverity.WARN, options);
         MutableContentClassificationMap map = new MutableContentClassificationMapImpl("Simple");
@@ -96,37 +99,42 @@ class AemClassificationValidatorFactoryTest {
         whiteListedResourceTypes.add("/resourceType1/.*");
         whiteListedResourceTypes.add("/resourceType2");
         whiteListedResourceTypes.add("/resourceType3");
+        Collection<String> ignoreViolationsInPropertiesMatchingPathPatterns = new LinkedList<>();
+        ignoreViolationsInPropertiesMatchingPathPatterns.add("/apps/mysite/components/reference");
+        ignoreViolationsInPropertiesMatchingPathPatterns.add("/apps/mysite/components/old-components/.*");
         Map<ContentClassification, ValidationMessageSeverity> severitiesPerClassification = new HashMap<>();
         severitiesPerClassification.put(ContentClassification.INTERNAL, ValidationMessageSeverity.DEBUG);
         severitiesPerClassification.put(ContentClassification.INTERNAL_DEPRECATED, ValidationMessageSeverity.INFO);
-        AemClassificationValidator expectedValidator = new AemClassificationValidator(ValidationMessageSeverity.WARN, new CompositeContentClassificationMap(map), whiteListedResourceTypes, severitiesPerClassification);
-        Assertions.assertEquals(expectedValidator, factory.createValidator(null, settings));
+        AemClassificationValidator expectedValidator = new AemClassificationValidator(ValidationMessageSeverity.WARN, new CompositeContentClassificationMap(map), whiteListedResourceTypes, ignoreViolationsInPropertiesMatchingPathPatterns, severitiesPerClassification);
+        Assertions.assertEquals(expectedValidator, factory.createValidator(mock(ValidationContext.class), settings));
 
         options = new HashMap<>();
         options.put("maps", "tccl:valid-classification.map");
         // new option for whitelisting
         options.put("whitelistedResourcePathPatterns", "/resourceType1/.*,/resourceType2,\n/resourceType3");
+        options.put("ignoreViolationsInPropertiesMatchingPathPatterns", "/apps/mysite/components/reference,\n/apps/mysite/components/old-components/.*");
         options.put("severitiesPerClassification", "INTERNAL=DEBUG,\nINTERNAL_DEPRECATED=INFO");
         settings = new ValidatorSettingsImpl(false, ValidationMessageSeverity.WARN, options);
-        Assertions.assertEquals(expectedValidator, factory.createValidator(null, settings));
+        Assertions.assertEquals(expectedValidator, factory.createValidator(mock(ValidationContext.class), settings));
 
         // test with multiple validation maps including whitespaces in the maps string
         options = new HashMap<>();
         options.put("maps", "tccl:valid-classification.map,tccl:empty-map-1.map,\n  \t tccl:empty-map-2.map");
         options.put("whitelistedResourcePathPatterns", "/resourceType1/.*,/resourceType2,\n/resourceType3");
+        options.put("ignoreViolationsInPropertiesMatchingPathPatterns", "/apps/mysite/components/reference,\n/apps/mysite/components/old-components/.*");
         options.put("severitiesPerClassification", "INTERNAL=DEBUG,\nINTERNAL_DEPRECATED=INFO");
         settings = new ValidatorSettingsImpl(false, ValidationMessageSeverity.WARN, options);
         ContentClassificationMap emptyMap = new ContentClassificationMapImpl("");
-        expectedValidator = new AemClassificationValidator(ValidationMessageSeverity.WARN, new CompositeContentClassificationMap(map, emptyMap, emptyMap), whiteListedResourceTypes, severitiesPerClassification);
-        Assertions.assertEquals(expectedValidator, factory.createValidator(null, settings));
+        expectedValidator = new AemClassificationValidator(ValidationMessageSeverity.WARN, new CompositeContentClassificationMap(map, emptyMap, emptyMap), whiteListedResourceTypes, ignoreViolationsInPropertiesMatchingPathPatterns, severitiesPerClassification);
+        Assertions.assertEquals(expectedValidator, factory.createValidator(mock(ValidationContext.class), settings));
     }
-    
+
     private static final class ValidatorSettingsImpl implements ValidatorSettings {
-        
+
         private final boolean isDisabled;
         private final ValidationMessageSeverity defaultSeverity;
         private Map<String, String> options;
-        
+
         ValidatorSettingsImpl(boolean isDisabled, ValidationMessageSeverity defaultSeverity, Map<String, String> options) {
             super();
             this.isDisabled = isDisabled;

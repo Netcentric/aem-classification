@@ -92,6 +92,12 @@
             <version>2.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.20.0</version>
+            <scope>test</scope>
+        </dependency>
         <!-- only transitive dependencies of 'vault-validation' but must be declared due to https://issues.apache.org/jira/browse/JCRVLT-394 -->
         <dependency>
             <groupId>javax.jcr</groupId>
