@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>biz.netcentric.filevault.validator</groupId>
     <artifactId>aem-classification</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>AEM Classification Reactor</name>
     <description>Reactor project building both the FileVault validator and the Maven Plugin</description>
@@ -37,7 +37,7 @@
         <connection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/Netcentric/aem-classification.git</developerConnection>
         <url>https://github.com/Netcentric/aem-classification</url>
-        <tag>aem-classification-1.2.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
