@@ -12,8 +12,8 @@ Group ID | Artifact ID
 
 
 The version depends on whether you use Classic or Cloud
-- AEM Classic (on premise/AMS), up to version `6.5.x.y`, i.e. `6.5.13.0` for AEM 6.5 SP13. Always consists out of 4 parts. The third party indicated the service pack.
-- AEM 6.5 LTS with technical version `6.6.x.y`. Always consists out of 4 parts. The third party indicated the service pack.
+- AEM Classic (on premise/AMS), up to version `6.5.x.y`, i.e. `6.5.13.0` for AEM 6.5 SP13. Always consists out of 4 parts. The third part indicates the service pack.
+- AEM 6.5 LTS with technical version `6.6.x.y`. Always consists out of 4 parts. The third part indicates the service pack.
 - AEM as a Cloud Service with `<YYYY>.<MM>.<BUILD>`, i.e. `2025.11.23482`. Always consists out of 3 parts.
 
 Please check [at Maven Central][3] which version is closest to the AEM version you use and pick that one for validation.
